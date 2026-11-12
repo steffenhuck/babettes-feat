@@ -272,7 +272,7 @@
         <p><b>Research.</b> How much of what the project needs survives. This is what you are for.<br>
            <b>Budget.</b> Your unit has <span id="budIntro"></span> for the year. Doing things properly is often the dear way. What is left at the end is yours to place.<br>
            <b>Risk.</b> What an auditor would make of the file, if he ever opened it.</p>
-        <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files. Each risky file they pull gets a spin of the wheel.</p>
+        <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files, and each gets a spin of its own wheel. The red on the wheel is the risk you left in the file.</p>
         <p>Beware: some ways through only sound clever.</p>
       </div>
       <div class="center" style="margin-top:18px"><button class="btn" id="startBtn">Open the first file</button></div>
@@ -888,7 +888,7 @@ function choose(i){
 
 /* ================= the audit ================= */
 function openDraw(){
-  S.p=auditRisk(S.picks); S.hit=false; S.hitIdx=-1; S.pulled=[]; S.queue=[];
+  S.p=auditRisk(S.picks); S.hit=false; S.hitIdx=-1; S.hits=[]; S.pulled=[]; S.queue=[];
   $("shelf").innerHTML=S.picks.map((r,i)=>`<div class="sfile ${r.q?"":"z"}" data-f="${i}">${S.names[i]}<b>${r.q?r.q+"%":"clean"}</b></div>`).join("");
   $("wheels").innerHTML=""; $("drawRes").textContent=""; $("drawSub").textContent="";
   $("pullBtn").style.display=""; $("pullBtn").disabled=false; $("spinBtn").style.display="none"; $("toEnd").style.display="none";
@@ -904,12 +904,11 @@ function reveal(){
   thudSound();
   $("shelf").querySelectorAll(".sfile").forEach((f,i)=>{ f.classList.remove("flash"); f.classList.add(S.pulled.includes(i)?"pulled":"dim"); });
   $("wheels").innerHTML=S.pulled.map((i,k)=>{ const r=S.picks[i];
-    return `<div class="wslot ${r.q?"wait":""}" id="ws${k}"><div class="cap">${S.names[i]}<small>${r.q?r.q+"% THAT THEY FIND SOMETHING":"NOTHING TO FIND"}</small></div>`+
-      (r.q ? `<div class="wheelwrap"><div class="pointer"></div><svg class="wheel" id="wh${k}" viewBox="-105 -105 210 210"></svg></div><div class="res" id="wr${k}"></div>`
-           : `<div class="stampd">IN ORDER</div>`)+`</div>`; }).join("");
-  S.pulled.forEach((i,k)=>{ if(S.picks[i].q) drawWheel($("wh"+k), S.picks[i].q/100, "#b3261e", "#2f6b3b"); });
-  S.queue=S.pulled.map((i,k)=>({i,k})).filter(x=>S.picks[x.i].q>0);
-  if(!S.queue.length) finishAudit(); else nextSpin();
+    return `<div class="wslot wait" id="ws${k}"><div class="cap">${S.names[i]}<small>${r.q?r.q+"% THAT THEY FIND SOMETHING":"A CLEAN FILE: NO RED ON THIS WHEEL"}</small></div>`+
+      `<div class="wheelwrap"><div class="pointer"></div><svg class="wheel" id="wh${k}" viewBox="-105 -105 210 210"></svg></div><div class="res" id="wr${k}"></div></div>`; }).join("");
+  S.pulled.forEach((i,k)=>drawWheel($("wh"+k), S.picks[i].q/100, "#b3261e", "#2f6b3b"));
+  S.queue=S.pulled.map((i,k)=>({i,k}));          // always two wheels, one per pulled file
+  nextSpin();
   setTimeout(()=>$("wheels").scrollIntoView({behavior:"smooth",block:"nearest"}),150);
 }
 function nextSpin(){
@@ -921,15 +920,15 @@ $("spinBtn").addEventListener("click",()=>{
   const x=S.queue.shift();
   spinWheel($("wh"+x.k), S.picks[x.i].q/100, hit=>{
     thudSound();
-    $("wr"+x.k).innerHTML = hit ? `<span style="color:var(--red)">Found.</span>` : `<span style="color:var(--green)">Nothing found.</span>`;
-    if(hit){ S.hit=true; S.hitIdx=x.i; finishAudit(); }
-    else if(S.queue.length) nextSpin(); else finishAudit();
+    $("wr"+x.k).innerHTML = hit ? `<span style="color:var(--red)">Found.</span>` : `<span style="color:var(--green)">${S.picks[x.i].q?"Nothing found.":"Nothing to find."}</span>`;
+    if(hit){ S.hit=true; S.hits.push(x.i); if(S.hitIdx<0) S.hitIdx=x.i; }
+    if(S.queue.length) nextSpin(); else finishAudit();
   });
 });
 function finishAudit(){
   if(S.hit){
     $("drawRes").innerHTML=`<span style="color:var(--red)">They found something.</span>`;
-    $("drawSub").innerHTML=`<b>${S.names[S.hitIdx]}:</b> ${S.picks[S.hitIdx].find}`;
+    $("drawSub").innerHTML=S.hits.map(i=>`<b>${S.names[i]}:</b> ${S.picks[i].find}`).join("<br>");
   } else {
     const anyRisky=S.pulled.some(i=>S.picks[i].q>0);
     $("drawRes").innerHTML=`<span style="color:var(--green)">${anyRisky?"They found nothing.":"There was nothing in those two."}</span>`;
@@ -957,7 +956,7 @@ function openEnd(){
   $("lineR").innerHTML = p===0 ? `Your files gave the audit <b>nothing</b> to find.` : `The chance that the audit would find something in your files: <b>${pct(p)}</b>.`;
   $("ico2").innerHTML=[0,1,2,3].map(i=>FLAME(i<nf)).join("")+`<span class="lbl">${["no risk","small risk","considerable risk","great risk","reckless"][nf]}</span>`;
   const pulledNames=S.pulled.map(i=>S.names[i]).join(" and ");
-  $("line2").textContent = S.hit ? `The auditors pulled ${pulledNames}, and found ${S.names[S.hitIdx]}. From January you are the institute's librarian.`+(band===2?" The researchers still come by, between the shelves, to ask how you would do it.":"")
+  $("line2").textContent = S.hit ? `The auditors pulled ${pulledNames}, and found ${S.hits.length===2?"something in both":"something in "+S.names[S.hitIdx]}. From January you are the institute's librarian.`+(band===2?" The researchers still come by, between the shelves, to ask how you would do it.":"")
      : S.pulled.some(i=>S.picks[i].q>0) ? `The auditors pulled ${pulledNames}, and found nothing.`
      : p===0 ? `The auditors pulled ${pulledNames}. There was nothing to find anywhere.`
      : `The auditors pulled ${pulledNames}, two files with nothing in them.`;
@@ -965,7 +964,7 @@ function openEnd(){
   $("trapBox").innerHTML = sillies.length ? `<div class="trap">${sillies.slice(0,2).map(x=>
       `<b>${S.names[x.i]}:</b> you took a ${x.r.q}% risk for ${x.r.pts} points. “${x.r.silly.label}” offered ${x.r.silly.pts} for ${x.r.silly.q?x.r.silly.q+"%":"no risk at all"}.`).join("<br>")}</div>` : "";
   $("ledger").innerHTML=S.picks.map((r,i)=>
-    `<div class="lrow ${i===S.hitIdx?"hit":""}"><span class="nm">${S.names[i]}${S.pulled.includes(i)?`<span class="tagp">PULLED</span>`:""}<small>${r.label}</small></span><span class="r">+${r.pts}</span><span class="q ${r.q?"":"z"}">${r.q?r.q+"%":"–"}</span></div>`).join("")
+    `<div class="lrow ${S.hits.includes(i)?"hit":""}"><span class="nm">${S.names[i]}${S.pulled.includes(i)?`<span class="tagp">PULLED</span>`:""}<small>${r.label}</small></span><span class="r">+${r.pts}</span><span class="q ${r.q?"":"z"}">${r.q?r.q+"%":"–"}</span></div>`).join("")
     + (S.left?`<div class="lrow"><span class="nm">The Leftover<small>${S.left.label}</small></span><span class="r">+${S.left.pts}</span><span class="q z">–</span></div>`:"");
   $("ruleLine").innerHTML=`Research: up to 75 per file, up to 100 for the leftover; ${FEAT} makes a feat. ${S.carried?"Carried into next year":"Returned to the ministry"}: <b>${eur(S.budget)}</b>.`;
   show("sEnd");
