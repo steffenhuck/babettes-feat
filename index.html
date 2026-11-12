@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Babette's Feat</title>
-<meta name="description" content="You are Babette, research manager. Six requests, one budget, one wheel. Here it's never about costs, only about the law.">
+<meta name="description" content="You are Babette, research manager. Twelve requests, one budget, two files pulled. Here it's never about costs, only about the law.">
 <script data-goatcounter="https://steffenhuck.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -234,6 +234,27 @@
   .lrow .q.z{color:#b9b5aa}
   .lrow.hit{background:#fbe9e7;margin:0 -8px;padding:6px 8px;border-radius:4px}
   .rule{font-size:14px;color:var(--muted);margin-top:12px}
+  .comp{margin-top:10px;padding:9px 12px;border-left:3px solid var(--red);background:#fbf1ef;font-size:15px;border-radius:0 4px 4px 0}
+  .feat{font-size:clamp(27px,5.6vw,40px);line-height:1.12}
+  .trap{margin-top:14px;padding:10px 12px;border-left:3px solid var(--amber);background:#fbf4e2;font-size:15px;border-radius:0 4px 4px 0}
+  .shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 14px}
+  @media (max-width:560px){ .shelf{grid-template-columns:repeat(3,1fr)} }
+  .sfile{border:1px solid #d9d2c0;border-radius:4px;padding:6px 7px;background:#fff;font-size:12.5px;line-height:1.25;transition:all .15s ease;min-height:52px}
+  .sfile b{display:block;font:600 12px "IBM Plex Mono",monospace;margin-top:2px;color:var(--red)}
+  .sfile.z b{color:var(--green)}
+  .sfile.flash{background:var(--mark);border-color:#d9a92b}
+  .sfile.pulled{background:var(--ink);border-color:var(--ink);color:#fff;transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,.25)}
+  .sfile.pulled b{color:#ffb4ab} .sfile.pulled.z b{color:#a9dcb4}
+  .sfile.dim{opacity:.4}
+  .wheels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .wslot{text-align:center}
+  .wslot .cap{font-weight:600;font-size:15px;min-height:40px}
+  .wslot .cap small{display:block;font:600 11.5px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+  .wslot .wheelwrap{width:min(190px,36vw);margin:12px auto 6px}
+  .wslot .res{font-family:"Fraunces",serif;font-weight:700;font-size:17px;min-height:24px}
+  .wslot .stampd{display:inline-block;margin:34px 0;font:600 15px "IBM Plex Mono",monospace;letter-spacing:.1em;color:var(--green);border:2.5px solid var(--green);border-radius:5px;padding:5px 10px;transform:rotate(-6deg)}
+  .wslot.wait{opacity:.45}
+  .lrow .tagp{font:600 9.5px "IBM Plex Mono",monospace;letter-spacing:.06em;background:var(--ink);color:#fff;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:1px}
 </style>
 </head>
 <body>
@@ -247,13 +268,13 @@
       <div class="motto">“Here it's never about costs. Only about the law.”</div>
       <div class="intro">
         <p>You are Babette, research manager. You have a PhD and an office between the professors and the administration.</p>
-        <p>Your job is to get research done. Six requests will cross your desk this year. Each has two, three or four ways through, and each way does three things:</p>
+        <p>Your job is to get research done. Twelve requests will cross your desk this year. Each has two to four ways through, and each way does three things:</p>
         <p><b>Research.</b> How much of what the project needs survives. This is what you are for.<br>
-           <b>Budget.</b> Your unit has <span id="budIntro"></span> for the year. Doing things properly is often the dear way. What is left in December is yours to place.<br>
-           <b>Risk.</b> The chance that this file, one day, costs you your desk. It adds up.</p>
-        <p>At the end of the year the wheel is spun once.</p>
+           <b>Budget.</b> Your unit has <span id="budIntro"></span> for the year. Doing things properly is often the dear way. What is left at the end is yours to place.<br>
+           <b>Risk.</b> What an auditor would make of the file, if he ever opened it.</p>
+        <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files. Each risky file they pull gets a spin of the wheel.</p>
+        <p>Beware: some ways through only sound clever.</p>
       </div>
-      <div class="stages" id="titleStages"></div>
       <div class="center" style="margin-top:18px"><button class="btn" id="startBtn">Open the first file</button></div>
     </div>
   </div>
@@ -265,7 +286,7 @@
   <div class="dials">
     <div class="dial" id="dRes"><div class="lab"><span>RESEARCH</span></div><div class="big"><span id="resV">0</span> <small>of 1000</small></div><div class="bar"><i></i></div></div>
     <div class="dial" id="dBud"><div class="lab"><span>BUDGET LEFT</span></div><div class="big" id="budV"></div><div class="bar"><i></i></div></div>
-    <div class="dial" id="dRisk"><div class="lab"><span>RISK SO FAR</span></div><div class="big" id="riskV">0%</div><div class="bar"><i></i></div></div>
+    <div class="dial" id="dRisk"><div class="lab"><span>AUDIT RISK</span></div><div class="big" id="riskV">0%</div><div class="bar"><i></i></div></div>
   </div>
   <div class="stagehead"><h2 id="stName"></h2><span class="no" id="stNo"></span></div>
   <div class="folder" id="stFolder" data-tab="">
@@ -280,20 +301,20 @@
   <footer><a href="https://steffenhuck.github.io/">steffen huck</a></footer>
 </section>
 
-<!-- ===== the draw ===== -->
+<!-- ===== the audit ===== -->
 <section class="screen" id="sDraw">
   <div class="folder" data-tab="ONE YEAR LATER · THE AUDIT">
     <div class="paper">
-      <h2 style="font-size:30px;margin-bottom:4px">The auditors are in the building.</h2>
-      <p style="margin:0 0 10px;color:var(--muted)">This is what you left for them to find. Each risk on its own was small, or wasn't. Together they make the red part of the wheel.</p>
-      <div class="risklist" id="riskList"></div>
-      <div class="wheelwrap"><div class="pointer"></div><svg class="wheel" id="wheel" viewBox="-105 -105 210 210"></svg></div>
-      <div class="wkey"><span><i style="background:#b3261e"></i>they find something: <span id="pRed"></span></span><span><i style="background:#2f6b3b"></i>they don't</span></div>
+      <h2 style="font-size:30px;margin-bottom:4px">The auditors have one afternoon.</h2>
+      <p style="margin:0 0 12px;color:var(--muted)">Twelve files on the shelf. They will pull two. The figure on each is what happens if they open it.</p>
+      <div class="shelf" id="shelf"></div>
+      <div class="wheels" id="wheels"></div>
       <div class="drawres" id="drawRes"></div>
       <div class="drawsub" id="drawSub"></div>
       <div class="center" style="margin-top:14px">
-        <button class="btn" id="spinBtn">Spin the wheel</button>
-        <button class="btn" id="toEnd" style="display:none">Babette's feat</button>
+        <button class="btn" id="pullBtn">Let them pull two files</button>
+        <button class="btn" id="spinBtn" style="display:none">Spin</button>
+        <button class="btn" id="toEnd" style="display:none">The verdict on the year</button>
       </div>
     </div>
   </div>
@@ -304,12 +325,13 @@
 <section class="screen" id="sEnd">
   <div class="folder" data-tab="THE YEAR">
     <div class="paper">
-      <div class="feat">Babette's Feat</div>
+      <div class="feat" id="featH"></div>
       <p class="featline" id="line1"></p>
       <div class="icons" id="ico1"></div>
       <p class="featline" id="lineR"></p>
       <div class="icons" id="ico2"></div>
       <p class="featline fate" id="line2"></p>
+      <div id="trapBox"></div>
       <div class="ledger" id="ledger"></div>
       <div class="rule" id="ruleLine"></div>
       <div class="endmotto">“Here it's never about costs. Only about the law.”</div>
@@ -327,7 +349,7 @@
    A route: [label, detail, research 0-10, cost in euro (from the unit's budget),
              risk % that this file is one day found out, what happens, what the auditors write]
    ===================================================================== */
-const BUDGET = 25000;
+const BUDGET = 40000;
 const SLOTS = [
 /* ------------------------------------------------------------ HIRING */
 { label:"Hiring", month:"February", cases:[
@@ -336,17 +358,18 @@ const SLOTS = [
           "The survey starts in April. Can she start on Monday? We sort out the paperwork later."],
     routes:[
       ["The full procedure","Six weeks of advert, a committee, then a contract.",3,1500,0,"She starts in June. The first survey wave runs without her.",""],
-      ["A one-week advert, with a note for the file","Narrow profile, fixed field season.",6,500,3,"She reaches the field on 20 April. She misses the pilot villages.","Advertising period shortened to one week for a candidate known in advance."],
-      ["Let her start on Monday","The contract follows when it follows.",10,0,25,"She is on the plane. The paperwork catches up in April, roughly.","Six weeks of work with no advert and no contract."]
+      ["A one-week advert, with a note for the file","Narrow profile, fixed field season.",8,500,8,"She reaches the field on 20 April. She misses the pilot villages.","Advertising period shortened to one week for a candidate known in advance."],
+      ["Let her start on Monday","The contract follows when it follows.",10,0,60,"She is on the plane. The paperwork catches up in April, roughly.","Six weeks of work with no advert and no contract."],
+      ["An unpaid internship until the contract is through","She starts Monday; nobody is employed without a contract.",6,0,70,"She works six weeks for nothing and is in the field on time, furious.","Six weeks of full-time work disguised as an unpaid internship."]
     ]},
   { name:"The Pipeline", ref:"PERS 0234", from:"Prof. Jonas Brettschneider", date:"16 February", subj:"Rasmussen's contract",
     body:["HR says Dr. Rasmussen cannot get another fixed-term contract. She has used up her years.",
           "But she built the data pipeline, nobody else understands it, and the grant runs until 2028."],
     routes:[
       ["HR is right. Let her go","Advertise the post.",1,12000,0,"A new postdoc spends eight months working out what Rasmussen's code does.",""],
-      ["One more year from the institute budget","Nobody counts.",8,0,20,"She stays. For now.","Fixed term beyond the legal maximum. The contract may now be permanent."],
+      ["One more year from the institute budget","Nobody counts.",8,0,60,"She stays. For now.","Fixed term beyond the legal maximum. The contract may now be permanent."],
       ["A contract tied to the grant, until 2028","A different paragraph of the same law: project money, project duration.",10,0,0,"She stays until the grant ends. Brettschneider: ‘Why does nobody tell us these things?’",""],
-      ["A guest badge, unpaid, until something turns up","She keeps working in the meantime.",5,0,30,"She works seven weeks for nothing, then takes a job at a bank.","Seven weeks of unpaid work under a guest badge. Disguised employment."]
+      ["A guest badge, unpaid, until something turns up","She keeps working in the meantime.",5,0,75,"She works seven weeks for nothing, then takes a job at a bank.","Seven weeks of unpaid work under a guest badge. Disguised employment."]
     ]},
   { name:"The Nervous One", ref:"PERS 0250", from:"Dr. Lea Hoffmeister", date:"20 February", subj:"Is this allowed?? (sorry)",
     body:["We advertised the postdoc, interviewed four people, and the committee ranked Dr. Novak first. She should start on 1 April.",
@@ -361,15 +384,15 @@ const SLOTS = [
           "HR can process three hires a month. So I'd pay them from the subject-payment budget, as ‘participants’."],
     routes:[
       ["Twelve hires, one by one","HR's pace.",3,3000,0,"The coding stretches over four months. The coders drift apart. Reliability collapses.",""],
-      ["Pay them as participants","It is a kind of experiment.",10,0,25,"Twelve ‘participants’ start on Monday. Done in three weeks, kappa of 0.84.","Twelve people paid as experimental subjects for three weeks of work. No contracts, no insurance."]
+      ["Pay them as participants","It is a kind of experiment.",10,0,50,"Twelve ‘participants’ start on Monday. Done in three weeks, kappa of 0.84.","Twelve people paid as experimental subjects for three weeks of work. No contracts, no insurance."]
     ]},
   { name:"The Star", ref:"PERS 0275", from:"Prof. Dieter Wendland", date:"26 February", subj:"Getting Hal Rosen on board",
     body:["Hal Rosen has agreed to advise us for six months. Yes, that Hal Rosen. He invented the estimator, and the extension we need isn't published.",
           "He started in January, actually. And he'd like the fee paid to his company in Delaware."],
     routes:[
-      ["A direct contract from today, paid to Rosen himself","With a note: nobody else can supply this.",6,0,3,"He grumbles about the tax form and signs in April. January to March he worked for nothing, and says so.","Consultancy awarded directly, without quotes."],
+      ["A direct contract from today, paid to Rosen himself","With a note: nobody else can supply this.",8,0,8,"He grumbles about the tax form and signs in April. January to March he worked for nothing, and says so.","Consultancy awarded directly, without quotes."],
       ["Three quotes, for form's sake","That is the rule for consultancy.",4,0,0,"Two consultancies decline politely. It takes until June.",""],
-      ["Backdate it to January and pay Delaware","As he asks.",10,0,30,"Hal says hello.","Contract dated two months before signature; fees paid to a company that is not party to it."],
+      ["Backdate it to January and pay Delaware","As he asks.",10,0,88,"Hal says hello.","Contract dated two months before signature; fees paid to a company that is not party to it."],
       ["Too exotic. Say no","No contract with Rosen.",0,0,0,"Wendland: ‘You have just turned down Hal Rosen. I want that in writing.’",""]
     ]},
   { name:"The Visa", ref:"PERS 0281", from:"Prof. Ingrid Valtonen", date:"27 February", subj:"Dr. Farahani can't wait four months",
@@ -377,16 +400,16 @@ const SLOTS = [
           "Let's pay her as a ‘consultant’ until she arrives."],
     routes:[
       ["Wait for the visa","Employment starts when she can enter the country.",3,0,0,"She arrives in July. Somebody else's student runs April, badly.",""],
-      ["The consultancy","A monthly invoice from Tehran.",9,0,15,"She runs April from her kitchen table. It goes well.","An employee in all but name paid as a consultant for four months. Payments to a sanctioned country without checks."],
-      ["A proper remote contract through a payroll service abroad","Legal checks it. It costs.",7,6000,2,"The service takes five weeks. She catches the second half of April.","Employment abroad through an intermediary, outside standard contracts."]
+      ["The consultancy","A monthly invoice from Tehran.",9,0,50,"She runs April from her kitchen table. It goes well.","An employee in all but name paid as a consultant for four months. Payments to a sanctioned country without checks."],
+      ["A proper remote contract through a payroll service abroad","Legal checks it. It costs.",8,6000,5,"The service takes five weeks. She catches the second half of April.","Employment abroad through an intermediary, outside standard contracts."]
     ]},
   { name:"The Overlap", ref:"PERS 0290", from:"Prof. Hartmut Kessler", date:"28 February", subj:"Frau Brandl retires on 31 March",
     body:["Frau Brandl has run the lab for 22 years. Everything is in her head. Her successor needs two months at her side.",
           "A post can't be filled twice, I'm told. So put the successor on the eye-tracking grant for two months. It's all lab work in the end."],
     routes:[
       ["No overlap","One post, one person.",3,0,0,"The successor finds a lab, a key, and a folder called ‘misc’. The autumn sessions are a mess.",""],
-      ["Two months on the eye-tracking grant","Nobody reads time sheets.",10,0,18,"Two months side by side. The lab runs as if nothing had happened.","Salary charged to a grant for work unrelated to it."],
-      ["Frau Brandl comes back for eight weeks on a small advisory contract","From the unit's budget.",8,4000,3,"She comes in three mornings a week and enjoys it enormously.","Contract with a newly retired employee, awarded without procedure."]
+      ["Two months on the eye-tracking grant","Nobody reads time sheets.",10,0,20,"Two months side by side. The lab runs as if nothing had happened.","Salary charged to a grant for work unrelated to it."],
+      ["Frau Brandl comes back for eight weeks on a small advisory contract","From the unit's budget.",8,4000,8,"She comes in three mornings a week and enjoys it enormously.","Contract with a newly retired employee, awarded without procedure."]
     ]}
 ]},
 /* ------------------------------------------------------------ THE LAB */
@@ -396,31 +419,34 @@ const SLOTS = [
           "So I'll withdraw €3,000 in cash and hand it out from an envelope. No receipts. Please don't make this complicated."],
     routes:[
       ["Bank transfers, like every other payment","Three weeks later, through accounting.",3,0,0,"Accounting sees every name next to every amount. So much for anonymity.",""],
-      ["Cash from the cashier, signed against cubicle numbers","A second person keeps the names. The two lists never meet.",7,1000,2,"It works. The sessions slip a week while the cashier orders the notes.","Subject payments in cash rather than by transfer."],
-      ["His envelope","It's a small sum.",10,0,25,"Tuesday runs beautifully.","€3,000 paid out in cash with no proof of payment at all."]
+      ["Cash from the cashier, signed against cubicle numbers","A second person keeps the names. The two lists never meet.",8,1000,5,"It works. The sessions slip a week while the cashier orders the notes.","Subject payments in cash rather than by transfer."],
+      ["His envelope","It's a small sum.",10,0,85,"Tuesday runs beautifully.","€3,000 paid out in cash with no proof of payment at all."],
+      ["A flat €15 each, in cash from petty cash","Simple, quick, the same for everyone.",3,0,60,"Nobody has a reason to take the game seriously. And it is still cash without receipts.","€1,440 paid out of petty cash with no proof of payment."]
     ]},
   { name:"The Online Study", ref:"LAB 0322", from:"Dr. Tomás Ferreira", date:"12 March", subj:"Launching tonight?",
     body:["The online experiment is ready, 400 participants. They have to get their bonus within a day, or they stop believing the stakes.",
           "I'll pay them from my own PayPal and claim it back. Can we go tonight?"],
     routes:[
-      ["The institute pays through the recruitment platform","The platform's log is the proof. No individual receipts.",6,1500,5,"Launched ten days late. Bonuses within a day.","400 payments without individual receipts."],
-      ["His PayPal, tonight","He claims it back afterwards.",10,0,22,"Live at 11 pm.","Grant money routed through a private account. 400 payments, one reimbursement claim."],
-      ["A signed receipt from every participant","As the payment rules say.",3,0,0,"61 send one back. The other 339 are chased until June. Half the pool stops trusting the lab.",""]
+      ["The institute pays through the recruitment platform","The platform's log is the proof. No individual receipts.",8,1500,10,"Launched ten days late. Bonuses within a day.","400 payments without individual receipts."],
+      ["His PayPal, tonight","He claims it back afterwards.",10,0,50,"Live at 11 pm.","Grant money routed through a private account. 400 payments, one reimbursement claim."],
+      ["A signed receipt from every participant","As the payment rules say.",3,0,0,"61 send one back. The other 339 are chased until June. Half the pool stops trusting the lab.",""],
+      ["Bonuses as shopping vouchers, bought on the institute card","No money changes hands.",5,0,50,"Participants in four countries can't redeem them. The forums notice.","400 vouchers bought and distributed with no record of recipients."]
     ]},
   { name:"The Classroom", ref:"LAB 0330", from:"Prof. Sabine Ludwig-Haas", date:"25 March", subj:"School experiment — all arranged!",
     body:["The primary school in Neukölln has agreed to our sharing experiment with nine-year-olds: whole classes, in their own classroom.",
           "The headmaster says it's fine, so we needn't bother the parents."],
     routes:[
-      ["A letter to every parent, in four languages","They sign or they don't.",6,800,0,"152 of 180 sign. The missing 28 are not a random 28.",""],
-      ["The headmaster's word is enough","Whole classes, no gaps.",10,0,40,"180 happy children.","Data collected from 180 children without parental consent."]
+      ["A letter to every parent, in four languages","They sign or they don't.",7,800,0,"152 of 180 sign. The missing 28 are not a random 28.",""],
+      ["The headmaster's word is enough","Whole classes, no gaps.",10,0,92,"180 happy children.","Data collected from 180 children without parental consent."],
+      ["Run it now; delete any child whose parents object afterwards","Parents get a letter after the fact.",5,0,88,"Nineteen parents object, loudly. Their children are deleted. They were not a random nineteen.","Data collected from 180 children without consent, and partly destroyed after complaints."]
     ]},
   { name:"The Pilot", ref:"LAB 0338", from:"Dr. Yuki Tanabe", date:"27 March", subj:"Just a pilot",
     body:["We have to pilot before the main sessions in April, or we can't calibrate the stakes. The ethics committee doesn't meet until May.",
           "It's only a pilot. Thirty subjects, a design we've run before."],
     routes:[
       ["Wait for the committee","May, as scheduled.",3,0,0,"The pilot runs in June, the main sessions in the autumn.",""],
-      ["Ask the chair for an expedited approval","Minimal risk; the committee is told in May.",7,0,2,"The chair wants two changes. The pilot runs ten days later, just in time.","Approval given by the chair alone."],
-      ["Just run it","Nobody will ever know.",10,0,10,"The pilot runs on Monday. Nothing happens.","Thirty subjects run without any ethics approval."]
+      ["Ask the chair for an expedited approval","Minimal risk; the committee is told in May.",8,0,5,"The chair wants two changes. The pilot runs ten days later, just in time.","Approval given by the chair alone."],
+      ["Just run it","Nobody will ever know.",10,0,25,"The pilot runs on Monday. Nothing happens.","Thirty subjects run without any ethics approval."]
     ]},
   { name:"The Lottery", ref:"LAB 0345", from:"Dr. Felix Amann", date:"30 March", subj:"Paying only some of them — is that OK?",
     body:["Subjects make twenty decisions and one is drawn at random and paid. And only one subject in ten is paid at all, but ten times as much.",
@@ -435,15 +461,15 @@ const SLOTS = [
           "Their administration says: cooperation agreement, user fee, three months."],
     routes:[
       ["The cooperation agreement","Signed by both administrations.",4,9000,0,"Signed in June. The semester has started; the trackers are booked.",""],
-      ["Just go over, with cake","Three weeks in the break.",10,0,12,"120 subjects in three weeks. Excellent cake.","Institute subjects tested on another institution's premises with no agreement and no insurance cover."],
-      ["A one-page letter of use, countersigned by both heads of administration","And a modest fee.",8,1500,3,"Two of the three weeks are still free by the time it is signed.","Use of external facilities on an informal letter."]
+      ["Just go over, with cake","Three weeks in the break.",10,0,20,"120 subjects in three weeks. Excellent cake.","Institute subjects tested on another institution's premises with no agreement and no insurance cover."],
+      ["A one-page letter of use, countersigned by both heads of administration","And a modest fee.",8,1500,8,"Two of the three weeks are still free by the time it is signed.","Use of external facilities on an informal letter."]
     ]},
   { name:"The Real Task", ref:"LAB 0351", from:"Prof. Anke Wolters", date:"31 March", subj:"Real-effort task",
     body:["For the effort experiment subjects need a task that feels like real work. I'd have them transcribe the institute's old handwritten archive. It's real, it's useful, they can tell.",
           "Legal says: then it is work, and work means contracts and the minimum wage."],
     routes:[
       ["A made-up task","Counting zeros in tables.",5,0,0,"Subjects count zeros. They know nobody needs zeros counted. Effort is flat across treatments.",""],
-      ["The archive","Real work, piece rates as designed.",10,0,15,"The effect is three times the size anyone has found with zeros. And the 1974 minutes are finally legible.","Subjects performed work of value to the institute, paid below the minimum wage, without contracts."]
+      ["The archive","Real work, piece rates as designed.",10,0,20,"The effect is three times the size anyone has found with zeros. And the 1974 minutes are finally legible.","Subjects performed work of value to the institute, paid below the minimum wage, without contracts."]
     ]}
 ]},
 /* ------------------------------------------------------------ TRAVEL */
@@ -452,56 +478,58 @@ const SLOTS = [
     body:["I'm presenting in Chicago on Friday and chairing on Saturday. Afterwards I must see Lindqvist in Boston, the only chance to finish our paper. Then I'd stay the weekend privately.",
           "My wife comes along. If the institute books both tickets together it's cheaper."],
     routes:[
-      ["Chicago and Boston, yes. He pays the weekend, she books her own ticket","Private days are fine if they cost nothing extra.",7,0,0,"He goes, grumbling, and cuts Boston short to fly home with his wife. The paper is almost finished.",""],
-      ["Book both tickets together","It is cheaper, after all.",10,0,12,"A lovely trip. The paper is finished on the plane home.","Second ticket booked on the institute's account for a private person."],
+      ["Chicago and Boston, yes. He pays the weekend, she books her own ticket","Private days are fine if they cost nothing extra.",8,0,0,"He goes, grumbling, and cuts Boston short to fly home with his wife. The paper is almost finished.",""],
+      ["Book both tickets together","It is cheaper, after all.",10,0,25,"A lovely trip. The paper is finished on the plane home.","Second ticket booked on the institute's account for a private person."],
       ["Chicago only","Boston looks like tourism.",3,0,0,"The paper with Lindqvist waits another year.",""]
     ]},
   { name:"The Visitor", ref:"TRAV 0519", from:"Prof. Ingrid Valtonen", date:"12 May", subj:"Mwangi's visit",
     body:["Dr. Mwangi from Nairobi is coming for three weeks to work on our paper. The data can't leave the building. He has no European bank account.",
           "He'll stay in my spare room and we claim the hotel rate; I give him his honorarium in cash at dinner. It's more dignified."],
     routes:[
-      ["The guest flat, and his stipend in cash from the cashier on day one","Against signature, with a note: no EU account.",7,2500,2,"The guest flat is free for two of the three weeks. They finish most of it.","Stipend paid out in cash."],
-      ["Her plan","Spare room, hotel rate, envelope at dinner.",10,0,20,"A warm three weeks. The paper is submitted.","€2,940 of hotel costs claimed for a professor's spare room; honorarium paid in cash at a restaurant."],
-      ["Hotel and bank transfer, by the book","The transfer goes to Nairobi.",5,4000,0,"The money arrives in week four. He borrows from Valtonen for three weeks.",""]
+      ["The guest flat, and his stipend in cash from the cashier on day one","Against signature, with a note: no EU account.",8,2500,5,"The guest flat is free for two of the three weeks. They finish most of it.","Stipend paid out in cash."],
+      ["Her plan","Spare room, hotel rate, envelope at dinner.",10,0,75,"A warm three weeks. The paper is submitted.","€2,940 of hotel costs claimed for a professor's spare room; honorarium paid in cash at a restaurant."],
+      ["Hotel and bank transfer, by the book","The transfer goes to Nairobi.",5,4000,0,"The money arrives in week four. He borrows from Valtonen for three weeks.",""],
+      ["Pay him once, as a ‘workshop speaker’","One honorarium, one form, no questions.",6,0,70,"The fee covers ten days. He leaves after ten days.","Speaker's honorarium paid for a workshop that did not take place."]
     ]},
   { name:"Fieldwork", ref:"TRAV 0527", from:"Dr. Kwame Mensah-Bauer", date:"20 May", subj:"Fieldwork travel request (boring, sorry)",
     body:["Four weeks in western Kenya, twelve villages. The enumerators are paid in cash at the end of each day, against signed lists. That's how it works there.",
           "Accounting wants bank transfers."],
     routes:[
-      ["Approve it as it stands","Cash isn't illegal. Cash without paper is.",10,0,2,"Four weeks, twelve villages, a signed cashbook.","Cash payments abroad on handwritten lists."],
+      ["Approve it as it stands","Cash isn't illegal. Cash without paper is.",10,0,5,"Four weeks, twelve villages, a signed cashbook.","Cash payments abroad on handwritten lists."],
       ["Bank transfers only","As accounting asks.",3,0,0,"Half the enumerators have no bank account. Half of them leave.",""]
     ]},
   { name:"The Villages", ref:"TRAV 0531", from:"Prof. Ruth Abendroth", date:"22 May", subj:"Brandenburg interviews — by car",
     body:["I'm interviewing councillors in fourteen villages on the evenings their councils meet. The last bus leaves at 17:40, so I'll take my own car and claim mileage.",
           "Two of the villages are near my mother's, so I'll add those weekends to the claim."],
     routes:[
-      ["Her car and a logbook for the council evenings","The weekends are hers.",7,0,2,"Twelve of fourteen. Two approvals came after the meeting had happened.","Private car used where public transport exists."],
+      ["Her car and a logbook for the council evenings","The weekends are hers.",8,0,5,"Twelve of fourteen. Two approvals came after the meeting had happened.","Private car used where public transport exists."],
       ["Train and bus","As the travel rules prefer.",4,0,0,"She reaches nine villages. In five there is no way home after the meeting.",""],
-      ["Sign the whole claim","Weekends included. It's a few kilometres.",10,0,10,"Fourteen out of fourteen. Mother sends her regards.","Mileage claimed for two private weekends."]
+      ["Sign the whole claim","Weekends included. It's a few kilometres.",10,0,25,"Fourteen out of fourteen. Mother sends her regards.","Mileage claimed for two private weekends."]
     ]},
   { name:"The Keynote", ref:"TRAV 0540", from:"Prof. Kemal Arslan", date:"28 May", subj:"Singapore keynote",
     body:["I've been asked to give the keynote in Singapore. The organisers pay a business-class flight and a fee of €3,000.",
           "I'd keep the fee, and claim our per diems and hotel on top, as usual."],
     routes:[
-      ["He goes; the fee is declared as outside work; no per diems","A third party pays, he says so.",7,0,2,"He goes, on leave for the day of the lecture. The institute's name is on one slide.","Personal fee received in connection with an official trip."],
-      ["Everything, as usual","Flight, fee, per diems, hotel.",10,0,20,"A splendid trip. Two new co-authors.","Hotel and per diems claimed for costs the organisers had already paid."],
-      ["He declines ticket and fee; the institute sends him in economy","Cleanest.",6,4500,0,"The organisers are puzzled. So is he.",""]
+      ["He goes; the fee is declared as outside work; no per diems","A third party pays, he says so.",8,0,5,"He goes, on leave for the day of the lecture. The institute's name is on one slide.","Personal fee received in connection with an official trip."],
+      ["Everything, as usual","Flight, fee, per diems, hotel.",10,0,75,"A splendid trip. Two new co-authors.","Hotel and per diems claimed for costs the organisers had already paid."],
+      ["He declines ticket and fee; the institute sends him in economy","Cleanest.",6,4500,0,"The organisers are puzzled. So is he.",""],
+      ["He goes privately, on holiday, and keeps everything","Then it is none of the institute's business.",5,0,40,"The keynote is given by a private citizen. The institute appears nowhere.","Undeclared paid outside activity."]
     ]},
   { name:"The Sublet", ref:"TRAV 0544", from:"Dr. Yuki Tanabe", date:"29 May", subj:"Three months at Stanford",
     body:["I'm at Stanford from September. The hotels within our nightly cap are an hour from campus. A colleague there sublets her flat for half the price, ten minutes' walk.",
           "She doesn't do invoices. I'd just claim the hotel flat rate."],
     routes:[
       ["A hotel within the cap","With an invoice. It costs twice the sublet.",5,4500,0,"Two hours on a bus every day. She stops going to the evening seminars.",""],
-      ["The sublet, with a one-page rental agreement and a note","Bank transfers as proof.",9,0,5,"Ten minutes from the department. She is at every seminar.","Accommodation rented from a private person without invoice."],
-      ["The sublet, claimed as hotel nights","Nobody checks Palo Alto.",10,0,18,"Ten minutes from the department, and a little left over.","Hotel flat rate claimed for a private sublet at half the cost."]
+      ["The sublet, with a one-page rental agreement and a note","Bank transfers as proof.",9,0,10,"Ten minutes from the department. She is at every seminar.","Accommodation rented from a private person without invoice."],
+      ["The sublet, claimed as hotel nights","Nobody checks Palo Alto.",10,0,50,"Ten minutes from the department, and a little left over.","Hotel flat rate claimed for a private sublet at half the cost."]
     ]},
   { name:"The Speakers", ref:"TRAV 0547", from:"Prof. Miriam Okafor", date:"30 May", subj:"Tickets for our Lagos and Accra speakers",
     body:["Three of our conference speakers come from Nigeria and Ghana. Our rules say guests buy their own tickets and are reimbursed afterwards. They can't lay out €1,400.",
           "I'll put the tickets on my credit card and claim them back."],
     routes:[
       ["Guests prepay, as the rules say","Reimbursement within six weeks.",3,0,0,"Two of the three can't come. The panel on African labour markets has no African economists.",""],
-      ["The institute's travel agency books for them","Non-employees on the institute account, with a note.",9,0,4,"All three come.","Tickets for non-employees booked directly on the institute's account."],
-      ["Her credit card","She claims it back in June.",10,0,10,"All three come, on the flights they wanted.","€4,200 of third parties' travel run through a private credit card."]
+      ["The institute's travel agency books for them","Non-employees on the institute account, with a note.",9,0,5,"All three come.","Tickets for non-employees booked directly on the institute's account."],
+      ["Her credit card","She claims it back in June.",10,0,20,"All three come, on the flights they wanted.","€4,200 of third parties' travel run through a private credit card."]
     ]}
 ]},
 /* ------------------------------------------------------------ PROCUREMENT */
@@ -510,24 +538,26 @@ const SLOTS = [
     body:["The second panel wave must be in the field by October, with the same people we interviewed in 2024. Only Panelwerk has them.",
           "The contract is just above the tender threshold, so let's split it into two orders."],
     routes:[
-      ["A direct award to Panelwerk, with a memo","Only they hold the 2024 respondents.",6,0,8,"The lawyers want the memo rewritten twice. In the field in December, not October.","Contract above the threshold awarded without competition."],
-      ["Two orders, each below the threshold","Signed on Friday.",10,0,25,"In the field on 1 October.","Two orders to one supplier, same project, same week, each just below the threshold."],
-      ["An open tender","As the threshold demands.",4,6000,0,"Only Panelwerk bids. It takes until March.",""]
+      ["A direct award to Panelwerk, with a memo","Only they hold the 2024 respondents.",8,0,30,"The lawyers want the memo rewritten twice. In the field in December, not October.","Contract above the threshold awarded without competition."],
+      ["Two orders, each below the threshold","Signed on Friday.",10,0,88,"In the field on 1 October.","Two orders to one supplier, same project, same week, each just below the threshold."],
+      ["An open tender","As the threshold demands.",4,6000,0,"Only Panelwerk bids. It takes until March.",""],
+      ["Ask Panelwerk to price it just below the threshold","And add a ‘maintenance contract’ next year.",6,0,85,"To make the price, Panelwerk drops a third of the sample.","Price arranged to avoid the threshold, with compensation promised in a later contract."]
     ]},
   { name:"The Cloud", ref:"PROC 0714", from:"Dr. Yuki Tanabe", date:"14 July", subj:"GPUs!",
     body:["The models need GPUs with 80 GB of memory for four months. The institute's framework provider doesn't have them. The data include health questions.",
           "I'd rent them on my own credit card in the US region, which is half the price."],
     routes:[
-      ["Another EU provider, outside the framework, with a memo","Three offers compared.",6,5000,5,"Running after six weeks of paperwork.","Cloud services bought outside the framework contract."],
-      ["Her card, the US region","Models running by the weekend.",10,0,28,"‘Amazing, thanks!’","€14,200 on a private card; health data processed outside the EU."],
-      ["Wait for the framework provider to upgrade","They promise January.",2,0,0,"She estimates on the standard server. One run takes eleven weeks.",""]
+      ["Another EU provider, outside the framework, with a memo","Three offers compared.",8,5000,20,"Running after six weeks of paperwork.","Cloud services bought outside the framework contract."],
+      ["Her card, the US region","Models running by the weekend.",10,0,90,"‘Amazing, thanks!’","€14,200 on a private card; health data processed outside the EU."],
+      ["Wait for the framework provider to upgrade","They promise January.",2,0,0,"She estimates on the standard server. One run takes eleven weeks.",""],
+      ["A free research tier in the US, with the health variables ‘masked’","Masked is almost anonymous.",4,0,80,"The free tier throttles after two weeks. The masking is a column rename.","Health data processed outside the EU; pseudonymisation reversible."]
     ]},
   { name:"The Translator", ref:"PROC 0722", from:"Prof. Kemal Arslan", date:"22 July", subj:"Questionnaire translation",
     body:["The questionnaire must be translated into Kurmanji by someone who understands survey wording. My brother-in-law is genuinely the best person for it.",
           "I'd simply give it to him and sign the invoice myself."],
     routes:[
-      ["Three quotes, his among them; someone else decides","Arslan declares the conflict and steps back.",7,0,2,"He wins anyway, four weeks later.","Contract awarded to a relative of the requester."],
-      ["Arslan gives it to him and signs","He is the best, after all.",10,0,18,"A very good translation, in ten days.","Contract awarded to the requester's relative and approved by the requester."],
+      ["Three quotes, his among them; someone else decides","Arslan declares the conflict and steps back.",8,0,5,"He wins anyway, four weeks later.","Contract awarded to a relative of the requester."],
+      ["Arslan gives it to him and signs","He is the best, after all.",10,0,60,"A very good translation, in ten days.","Contract awarded to the requester's relative and approved by the requester."],
       ["No relatives. A translation agency","To be on the safe side.",3,3500,0,"‘Trust in institutions’ comes back as ‘belief in buildings’.",""]
     ]},
   { name:"The Vouchers", ref:"PROC 0729", from:"Prof. Sabine Ludwig-Haas", date:"28 July", subj:"2,000 vouchers",
@@ -535,7 +565,7 @@ const SLOTS = [
           "Accounting wants a signed receipt for every voucher. From people who haven't opened the envelope yet."],
     routes:[
       ["Vouchers only for those who return a signed slip","As accounting asks.",3,0,0,"14% response. We now know a great deal about retired teachers.",""],
-      ["Send them all, no receipts","A list of serial numbers will have to do.",10,0,12,"52% response.","€20,000 in vouchers handed out without receipts."]
+      ["Send them all, no receipts","A list of serial numbers will have to do.",10,0,20,"52% response.","€20,000 in vouchers handed out without receipts."]
     ]},
   { name:"The Books", ref:"PROC 0733", from:"Dr. Lea Hoffmeister", date:"30 July", subj:"40 books — sorry, probably not allowed",
     body:["The reading group needs forty copies by next week, when the visiting fellows arrive. I'd order them from the bookshop round the corner.",
@@ -550,7 +580,7 @@ const SLOTS = [
           "Public money can't buy coffee machines. Put it down as ‘laboratory water heating device’."],
     routes:[
       ["No machine","The rule is clear.",4,0,0,"People drink their coffee at their desks, alone. Nobody notices what stops happening.",""],
-      ["‘Laboratory water heating device’","€1,200, from the lab budget.",10,1200,15,"The room fills up again within a day.","Espresso machine purchased as laboratory equipment."],
+      ["‘Laboratory water heating device’","€1,200, from the lab budget.",10,1200,50,"The room fills up again within a day.","Espresso machine purchased as laboratory equipment."],
       ["A collection among the professors","€110 each.",8,0,0,"Babette spends two weeks asking eleven professors for €110. Nine pay. She covers the rest.",""],
       ["The director's discretionary fund","It exists for exactly this. One has to know it exists.",10,0,0,"The director signs between two meetings. ‘Is that all?’",""]
     ]},
@@ -559,8 +589,9 @@ const SLOTS = [
           "They have none of these. I could pay them through a friend of mine there, in cash."],
     routes:[
       ["A German intermediary that subcontracts the Lagos firm","All documents present.",6,18000,0,"Same firm, three times the price, and a project manager in Hamburg who has questions.",""],
-      ["Contract the Lagos firm directly, on the documents they do have","With a memo on why the form can't apply.",9,0,8,"Fieldwork starts on time.","Supplier accepted without the required certificates and references."],
-      ["Cash, through his friend","No contract at all.",10,0,35,"Fieldwork starts a week early.","€22,000 paid in cash abroad through a private intermediary. No contract, no receipts."]
+      ["Contract the Lagos firm directly, on the documents they do have","With a memo on why the form can't apply.",9,0,25,"Fieldwork starts on time.","Supplier accepted without the required certificates and references."],
+      ["Cash, through his friend","No contract at all.",10,0,92,"Fieldwork starts a week early.","€22,000 paid in cash abroad through a private intermediary. No contract, no receipts."],
+      ["Four small contracts, each below the documentation limit","Same firm, same work.",8,0,85,"Fieldwork starts on time, in four instalments.","One service divided into four contracts to avoid supplier checks."]
     ]}
 ]},
 /* ------------------------------------------------------------ DATA */
@@ -569,10 +600,11 @@ const SLOTS = [
     body:["We need individual tax records linked to our survey respondents, before the revision deadline in March.",
           "A friend at the ministry can put the file on a USB stick for us."],
     routes:[
-      ["Take the stick","Matched by Tuesday.",10,0,40,"‘Told you. Good news.’ The revision goes in six weeks early.","Tax records of 40,000 people obtained without any legal basis."],
-      ["The research data centre, fast-tracked","And two more months from the journal.",5,5000,0,"May instead of March, and only a 10% sample of the records.",""],
+      ["Take the stick","Matched by Tuesday.",10,0,95,"‘Told you. Good news.’ The revision goes in six weeks early.","Tax records of 40,000 people obtained without any legal basis."],
+      ["The research data centre, fast-tracked","And two more months from the journal.",7,5000,0,"May instead of March, and only a 10% sample of the records.",""],
       ["Published regional averages will have to do","Nothing individual.",2,0,0,"Nothing can be linked. The revision is withdrawn.",""],
-      ["A formal request to the ministry for the full file","Through the front door.",4,0,0,"The ministry replies after eleven months. It says no.",""]
+      ["A formal request to the ministry for the full file","Through the front door.",4,0,0,"The ministry replies after eleven months. It says no.",""],
+      ["Take the file, but use only a 10% sample","To be careful.",5,0,92,"A tenth of the data, all of the exposure.","Tax records of 40,000 people obtained without any legal basis."]
     ]},
   { name:"The Replication Package", ref:"DATA 0916", from:"Dr. Paula Simonetti", date:"16 September", subj:"Posting our data — ok?",
     body:["The journal won't publish until data and code are public. Everything is anonymised and participants agreed to open publication.",
@@ -586,23 +618,24 @@ const SLOTS = [
     body:["Sixty interviews with local councillors need verbatim transcripts. The institute's agency takes eleven weeks.",
           "There's a free AI app that does it in a day. I'd put the recordings on my Dropbox."],
     routes:[
-      ["An open model on an institute machine, offline","The data protection officer is told.",7,0,5,"IT needs three weeks to set it up. Then sixty transcripts in two days.","Interview recordings processed with software outside the approved list."],
-      ["The free app and her Dropbox","Done by Monday.",10,0,25,"Done by Monday.","60 identifiable recordings uploaded to a service that keeps and trains on its inputs."],
-      ["The agency","As always.",5,4000,0,"Eleven weeks. The local elections overtake the analysis.",""]
+      ["An open model on an institute machine, offline","The data protection officer is told.",8,0,10,"IT needs three weeks to set it up. Then sixty transcripts in two days.","Interview recordings processed with software outside the approved list."],
+      ["The free app and her Dropbox","Done by Monday.",10,0,85,"Done by Monday.","60 identifiable recordings uploaded to a service that keeps and trains on its inputs."],
+      ["The agency","As always.",5,4000,0,"Eleven weeks. The local elections overtake the analysis.",""],
+      ["The free app, and delete the uploads straight afterwards","Then nothing stays out there.",8,0,80,"Transcripts by Monday. The app's terms keep a copy for thirty days.","60 identifiable recordings uploaded to an external service."]
     ]},
   { name:"The Firm", ref:"DATA 0933", from:"Dr. Tomás Ferreira", date:"30 September", subj:"They're giving us the HR data!!",
     body:["A big retailer will give us personnel records for 30,000 employees. They want to see each paper 30 days before submission.",
           "Their lawyer sent an NDA with a publication veto. I've signed it already, to keep things moving."],
     routes:[
-      ["Withdraw his signature; offer a 30-day preview without a veto","For trade secrets only.",6,0,5,"The firm's lawyers take until December, and half the variables are gone.","Outside party given advance sight of unpublished research."],
-      ["Let his signature stand","The data arrive on Friday.",8,0,18,"Best data of his life. So far the firm has liked every result.","Agreement binding the institute signed without authority, including a veto on publication."],
+      ["Withdraw his signature; offer a 30-day preview without a veto","For trade secrets only.",7,0,20,"The firm's lawyers take until December, and half the variables are gone.","Outside party given advance sight of unpublished research."],
+      ["Let his signature stand","The data arrive on Friday.",8,0,70,"Best data of his life. So far the firm has liked every result.","Agreement binding the institute signed without authority, including a veto on publication."],
       ["The institute's standard agreement, unaltered","No previews for outsiders.",1,0,0,"The firm doesn't answer.",""]
     ]},
   { name:"The Old Addresses", ref:"DATA 0921", from:"Prof. Anke Wolters", date:"21 September", subj:"Following up the 2019 respondents",
     body:["We want to re-interview the people from our 2019 study. Seven years on, the same people. Their consent back then covered ‘this study’.",
           "I'd write to them once and ask."],
     routes:[
-      ["One letter, asking for fresh consent","Is that still ‘this study’? Arguably.",9,0,8,"1,480 say yes. The only seven-year panel on this question now exists.","Contact data used beyond the original consent."],
+      ["One letter, asking for fresh consent","Is that still ‘this study’? Arguably.",9,0,25,"1,480 say yes. The only seven-year panel on this question now exists.","Contact data used beyond the original consent."],
       ["Delete the addresses. A fresh sample","Consent is consent.",2,20000,0,"Seven years of change, measured on different people.",""]
     ]},
   { name:"The Scrape", ref:"DATA 0935", from:"Dr. Felix Amann", date:"30 September", subj:"My student's Twitter data",
@@ -610,15 +643,16 @@ const SLOTS = [
           "Her defence is in February. Legal suggests deleting everything."],
     routes:[
       ["Delete everything","As legal suggests.",1,0,0,"Three years of a thesis are gone. She leaves academia.",""],
-      ["Keep it, publish, say nothing","Half the field does.",10,0,15,"She defends in February. The paper is under review.","Data obtained in breach of a platform's terms, published with post-level examples."],
-      ["Keep it for the analysis; publish only aggregates","With an outside opinion on the research exception.",8,2000,5,"She defends in February. The replication package has to stay closed.","Scraped platform data retained on the strength of a legal opinion."]
+      ["Keep it, publish, say nothing","Half the field does.",10,0,30,"She defends in February. The paper is under review.","Data obtained in breach of a platform's terms, published with post-level examples."],
+      ["Keep it for the analysis; publish only aggregates","With an outside opinion on the research exception.",8,2000,8,"She defends in February. The replication package has to stay closed.","Scraped platform data retained on the strength of a legal opinion."]
     ]},
   { name:"The Taxi", ref:"DATA 0938", from:"Prof. Miriam Okafor", date:"30 September", subj:"Small mishap in Nairobi",
     body:["My laptop was left in a taxi in Nairobi. The interview files from Kisumu were on it. It has a password. It was not encrypted.",
           "A data breach has to be reported within 72 hours. Nobody will ever know. And the fieldwork is at its most delicate point."],
     routes:[
       ["Report it","Within 72 hours, as the law says.",4,0,0,"The authority asks forty questions. Fieldwork pauses for six weeks. Interviewees are informed; eleven withdraw.",""],
-      ["Say nothing","It's a laptop in a taxi.",10,0,20,"Fieldwork continues. The laptop is never heard of again.","Loss of unencrypted interview data not reported."]
+      ["Say nothing","It's a laptop in a taxi.",10,0,50,"Fieldwork continues. The laptop is never heard of again.","Loss of unencrypted interview data not reported."],
+      ["Report it in three weeks, when the fieldwork is done","A little late, but honest.",8,0,70,"Fieldwork finishes. The authority wants to know what happened in the three weeks.","Data breach reported nineteen days after the deadline."]
     ]}
 ]},
 /* ------------------------------------------------------------ DECEMBER */
@@ -627,31 +661,33 @@ const SLOTS = [
     body:["The field experiment runs in April. Our partner NGO must hire enumerators from January and has no reserves. The grant pays on delivery.",
           "There's €38,000 in the grant for them. Let's transfer it all now, against a December invoice for ‘services’."],
     routes:[
-      ["30% on signing a contract with milestones","A memo explains why they can't pre-finance.",6,0,8,"The NGO starts in February with half the enumerators.","Payment made before any service was delivered."],
-      ["All of it now, against the December invoice","Simple.",10,0,28,"The NGO hires in January. April is fully staffed.","€38,000 paid against a December invoice for services delivered in April."],
-      ["Pay on delivery","As the grant says.",3,0,0,"The NGO takes a loan at 19% and starts in March. The experiment shrinks.",""]
+      ["30% on signing a contract with milestones","A memo explains why they can't pre-finance.",8,0,25,"The NGO starts in February with half the enumerators.","Payment made before any service was delivered."],
+      ["All of it now, against the December invoice","Simple.",10,0,88,"The NGO hires in January. April is fully staffed.","€38,000 paid against a December invoice for services delivered in April."],
+      ["Pay on delivery","As the grant says.",3,0,0,"The NGO takes a loan at 19% and starts in March. The experiment shrinks.",""],
+      ["All of it now, into a separate account the NGO's director controls","A kind of escrow.",7,0,85,"The NGO hires in January. In March the director leaves, and so does part of the account.","€38,000 transferred to an account under one person's control before any service."]
     ]},
   { name:"The Shopping List", ref:"BUD 1209", from:"Prof. Hartmut Kessler", date:"9 December", subj:"Year-end shopping on the grant",
     body:["€21,000 left on the eye-tracking grant. We need two new trackers for the last study in February, and the analysis software, which only comes as a twelve-month licence. The grant ends in June.",
           "And eight laptops for the next project, delivered in January, invoiced now."],
     routes:[
-      ["Trackers and the licence, with a memo. No laptops","The vendor sells no shorter term.",7,0,5,"The trackers are lovely. The next project starts in April on five-year-old laptops.","Licence paid for six months beyond the end of the grant."],
-      ["The whole list, invoiced on 30 December","Not a cent wasted.",10,0,20,"Splendid.","Laptops for another project paid from this grant; invoice dated before delivery."],
-      ["Nothing that outlasts the grant, nothing in a hurry","The money goes back.",2,0,0,"February runs on the old tracker, which loses every third fixation.",""]
+      ["Trackers and the licence, with a memo. No laptops","The vendor sells no shorter term.",8,0,10,"The trackers are lovely. The next project starts in April on five-year-old laptops.","Licence paid for six months beyond the end of the grant."],
+      ["The whole list, invoiced on 30 December","Not a cent wasted.",10,0,75,"Splendid.","Laptops for another project paid from this grant; invoice dated before delivery."],
+      ["Nothing that outlasts the grant, nothing in a hurry","The money goes back.",2,0,0,"February runs on the old tracker, which loses every third fixation.",""],
+      ["Order the laptops too, and keep them boxed until April","Then nobody uses them on the wrong project.",8,0,80,"Eight unopened boxes sit in the lab over New Year.","Equipment for another project bought from this grant and stored unused."]
     ]},
   { name:"The Workshop", ref:"BUD 1214", from:"Prof. Miriam Okafor", date:"14 December", subj:"Workshop on the 18th — dinner",
     body:["The workshop is on the 18th, the only date Professor Adeyemi can do. Speakers' travel is covered by the grant.",
           "Let's pay the dinner with wine from the grant too. It's where the collaborations get made."],
     routes:[
-      ["Dinner from the unit's budget","Water, and one glass of wine each.",7,2500,0,"‘One glass. Very German.’ People leave at nine.",""],
-      ["Dinner and wine on the grant","Tradition.",10,0,12,"A memorable evening. Two joint projects by midnight.","€2,300 of food and wine charged to a grant that excludes hospitality."],
+      ["Dinner from the unit's budget","Water, and one glass of wine each.",8,2500,0,"‘One glass. Very German.’ People leave at nine.",""],
+      ["Dinner and wine on the grant","Tradition.",10,0,20,"A memorable evening. Two joint projects by midnight.","€2,300 of food and wine charged to a grant that excludes hospitality."],
       ["Postpone to February and plan it properly","Then there is time for approvals.",2,0,0,"Adeyemi can't come.",""]
     ]},
   { name:"The Fee", ref:"BUD 1217", from:"Dr. Kwame Mensah-Bauer", date:"17 December", subj:"Open-access fee — am I prepaying?",
     body:["The paper was accepted yesterday; the funder requires open access. The publisher has invoiced €2,900 on the grant now, though the article appears in February, after the grant closes.",
           "Accounting calls it an advance payment."],
     routes:[
-      ["Pay it now, from the grant","The fee fell due on acceptance.",10,0,2,"Paid on the 18th.","Publication fee paid before publication."],
+      ["Pay it now, from the grant","The fee fell due on acceptance.",10,0,5,"Paid on the 18th.","Publication fee paid before publication."],
       ["Wait until it is published","Then nobody can object.",3,0,0,"In February nobody has €2,900. The paper goes behind a paywall, against the funder's terms.",""],
       ["Pay it from the unit's budget instead","No argument with accounting.",9,2900,0,"Paid. The grant hands back €2,900 it was given for exactly this.",""]
     ]},
@@ -659,52 +695,69 @@ const SLOTS = [
     body:["Dr. Rasmussen has carried this project for two years and has an offer from a bank. If she goes in January, the project stops.",
           "There's €4,000 left on the grant. Simplest would be a travel claim for a conference she didn't go to."],
     routes:[
-      ["A performance allowance through payroll","The pay agreement has a clause for it.",6,0,5,"The allowance is a third of what the bank offers. She stays until the summer.","Payment above the pay scale."],
-      ["The travel claim","A week in Lisbon she spent at her desk.",10,0,30,"She is touched, and slightly alarmed. She stays.","Travel reimbursement for a conference the claimant did not attend."],
-      ["A warm email","Public pay scales are what they are.",1,0,0,"She starts at the bank on 1 February.",""]
+      ["A performance allowance through payroll","The pay agreement has a clause for it.",8,0,10,"The allowance is a third of what the bank offers. She stays until the summer.","Payment above the pay scale."],
+      ["The travel claim","A week in Lisbon she spent at her desk.",10,0,92,"She is touched, and slightly alarmed. She stays.","Travel reimbursement for a conference the claimant did not attend."],
+      ["A warm email","Public pay scales are what they are.",1,0,0,"She starts at the bank on 1 February.",""],
+      ["A ‘best paper prize’ of €4,000","Invented for the occasion.",7,0,80,"She is pleased, briefly. A prize is taxed, and a prize is once.","Prize money paid without statute, jury or call."]
     ]},
   { name:"The Empty Fellowship", ref:"BUD 1219", from:"Prof. Sabine Ludwig-Haas", date:"18 December", subj:"The fellowship nobody took",
     body:["Our visiting fellow cancelled. Her €15,000 fellowship lapses on the 31st. I have a doctoral student, brilliant, whose funding ran out in October. She is writing up on unemployment benefit.",
           "Give it to her. Today."],
     routes:[
       ["Let it lapse","A fellowship needs a call and a committee.",1,0,0,"She takes a job in a call centre and writes at night.",""],
-      ["Award it to her today","One signature.",10,0,15,"She submits in June.","Fellowship awarded without call or selection."],
-      ["A one-week call, a committee of three, decision on the 30th","Tight.",7,0,3,"Four apply. She wins. Christmas is cancelled for three committee members.","Fellowship call open for five working days."]
+      ["Award it to her today","One signature.",10,0,25,"She submits in June.","Fellowship awarded without call or selection."],
+      ["A one-week call, a committee of three, decision on the 30th","Tight.",8,0,5,"Four apply. She wins. Christmas is cancelled for three committee members.","Fellowship call open for five working days."]
     ]},
   { name:"The Server", ref:"BUD 1220", from:"Dr. Tomás Ferreira", date:"20 December", subj:"The panel server is dying",
     body:["The server with fifteen years of panel data is throwing disk errors. IT gives it three weeks. The last full backup is from 2023. A replacement costs €14,000, which means a tender, which means March.",
           "I could copy everything to my private cloud tonight."],
     routes:[
       ["Start the tender","As the amount requires.",2,0,0,"The server fails on 9 January. Two years of panel data are gone.",""],
-      ["Buy the server today, as an emergency purchase","From the unit's budget, with a memo written tonight.",10,14000,6,"Installed on the 23rd. Everything is copied by New Year.","€14,000 purchase without tender, declared an emergency."],
-      ["His private cloud, tonight","Free, and fast.",8,0,18,"The data are safe. They are also on a consumer account in his name.","Fifteen years of identifiable panel data copied to a private cloud account."]
+      ["Buy the server today, as an emergency purchase","From the unit's budget, with a memo written tonight.",10,14000,10,"Installed on the 23rd. Everything is copied by New Year.","€14,000 purchase without tender, declared an emergency."],
+      ["His private cloud, tonight","Free, and fast.",8,0,55,"The data are safe. They are also on a consumer account in his name.","Fifteen years of identifiable panel data copied to a private cloud account."]
     ]}
 ]}
 ];
 
-/* The leftover: one last question about the money that is still there on 15 December. */
-const TRANSFER_P = 55;
+/* The leftover: one last question about the money that is still there at the end of the year. */
+const BUDGET_NOTE = 400;          // euro of leftover per research point at stake
+const TRANSFER_P = 60;            // % chance the ministry approves a carry-over
+const RIG_SHARE = 0.5;            // share of the bonus the rig delivers for certain
 function leftoverCase(L){
-  const bonus = Math.min(100, Math.round(L/250));         // research points at stake
-  return { name:"The Leftover", ref:"BUD 1215", from:"Accounting", date:"15 December", subj:`${eur(L)} unspent`, bonus,
-    body:[`Your unit has ${eur(L)} left. Whatever is not spent or committed by 31 December goes back to the ministry.`,
+  const bonus = Math.min(100, Math.round(L/BUDGET_NOTE));
+  return { name:"The Leftover", ref:"BUD 1215", from:"Accounting", subj:`${eur(L)} unspent`, bonus,
+    body:[`It is the middle of December. Your unit has ${eur(L)} left. Whatever is not spent or committed by the 31st goes back to the ministry.`,
           `Prof. Kessler has wanted a second eye-tracking rig for years. It would cost about that.`],
     routes:[
-      ["Let Kessler order the rig today","Delivered and invoiced before New Year, if the supplier hurries.",Math.round(0.6*bonus),L,6,"The rig arrives on the 29th. Kessler is in the lab on New Year's Day.","Large purchase in the last days of the budget year, with no plan it belonged to."],
-      ["Apply to carry it over into next year","The ministry decides. Sometimes it says yes.",bonus,0,0,"",""],
+      ["Let Kessler order the rig today","Useful, if not what the money was meant for. Delivered before New Year.",Math.round(RIG_SHARE*bonus),L,0,"The rig arrives on the 29th. Kessler is in the lab on New Year's Day.",""],
+      ["Apply to carry it over into next year","The ministry decides. It says yes a little more often than not.",bonus,0,0,"",""],
       ["Let it go back","That is what the rule says happens.",0,0,0,"The ministry is grateful. Next year's budget is cut by the same amount, since you evidently didn't need it.",""]
     ]};
 }
 
 /* ================= state ================= */
 let S;
-const pick = a => a[Math.floor(Math.random()*a.length)];
+const N_FILES = 12, N_PULLED = 2, MAX_PER_AREA = 3;
+const POOL = SLOTS.flatMap(sl=>sl.cases.map(c=>({...c, area:sl.label})));
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function fresh(){ return {cases:SLOTS.map(s=>pick(s.cases)), stage:0, res:0, budget:BUDGET, picks:[], names:[], order:[], done:false, final:false}; }
+function drawYear(){
+  // twelve stories, no repeats, at most three from one area; year-end stories come last
+  const count={}, out=[];
+  for(const c of shuffle(POOL)){ if(out.length===N_FILES) break; if((count[c.area]||0)>=MAX_PER_AREA) continue; count[c.area]=(count[c.area]||0)+1; out.push(c); }
+  return out.filter(c=>c.area!=="December").concat(out.filter(c=>c.area==="December"));
+}
+function fresh(){ return {cases:drawYear(), stage:0, res:0, budget:BUDGET, picks:[], names:[], order:[], done:false, final:false, left:null}; }
 const R = r => ({label:r[0], sub:r[1], res:r[2], cost:r[3], q:r[4], out:r[5], find:r[6]});
-const PTS = 15;                                             // research points per card = 15 x (0..10); six cards = 900; leftover up to 100
-const totalRisk = picks => 1 - picks.reduce((a,r)=>a*(1-r.q/100),1);
-const riskWord = q => q===0?"nothing to find":q<=3?"slight":q<=8?"small":q<=15?"real":q<=25?"high":"reckless";
+const FEAT = 850, SOLID = 550;                              // research needed for "Babette's feat" and for "a solid year"
+const RISK_BANDS = [0.12,0.25,0.40];                        // audit risk: small / considerable / great / reckless
+const ptsOf = res => Math.round(res*7.5);                   // 0..10 -> 0..75 per file; twelve files = 900; the leftover up to 100
+/* Chance the audit finds something: two of the twelve files are pulled at random; a pulled file is found
+   with its own risk. Files not yet decided count as clean. */
+function auditRisk(picks){
+  const q=picks.map(r=>r.q/100); while(q.length<N_FILES) q.push(0);
+  let safe=0,n=0; for(let a=0;a<N_FILES;a++) for(let b=a+1;b<N_FILES;b++){ safe+=(1-q[a])*(1-q[b]); n++; }
+  return 1-safe/n;
+}
 
 /* ================= sound ================= */
 let AC=null;
@@ -731,15 +784,10 @@ function show(id){
 function drawDials(){
   $("resV").textContent=S.res; $("dRes").querySelector(".bar i").style.width=(S.res/10)+"%";
   $("budV").textContent=eur(S.budget); $("dBud").querySelector(".bar i").style.width=(100*S.budget/BUDGET)+"%";
-  const t=totalRisk(S.picks); $("riskV").textContent=pct(t); $("dRisk").querySelector(".bar i").style.width=(100*t)+"%";
-}
-function drawTitleStages(){
-  $("budIntro").textContent=eur(BUDGET);
-  $("titleStages").innerHTML = SLOTS.map((sl,i)=>
-    `<div class="scard ${i===0?"":"locked"}"><div class="n">${i+1} · ${sl.month.toUpperCase()}</div><div class="t">${sl.label}</div><div class="s">&nbsp;</div></div>`).join("");
+  const t=auditRisk(S.picks); $("riskV").textContent=pct(t); $("dRisk").querySelector(".bar i").style.width=(100*t)+"%";
 }
 
-/* ---- the wheel: red sector = p, starting at 12 o'clock, clockwise ---- */
+/* ---- a wheel: red sector = p, starting at 12 o'clock, clockwise ---- */
 function drawWheel(svg, p, red, green){
   const a=Math.max(0.0001,Math.min(0.9999,p))*2*Math.PI, x=100*Math.sin(a), y=-100*Math.cos(a), big=p>0.5?1:0;
   let ticks=""; for(let i=0;i<40;i++){const t=i/40*2*Math.PI; ticks+=`<line x1="${96*Math.sin(t)}" y1="${-96*Math.cos(t)}" x2="${100*Math.sin(t)}" y2="${-100*Math.cos(t)}" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>`;}
@@ -751,17 +799,16 @@ function spinWheel(svg, p, done){
   const u=Math.random(), hit=u<p;
   svg.style.transform=`rotate(${360*6-360*u}deg)`;         // the point at angle u comes to rest under the pointer
   setTimeout(()=>done(hit),4400);
-  return hit;
 }
 
-/* ================= stage ================= */
+/* ================= a file ================= */
 function openStage(){
-  const st = S.final ? leftoverCase(S.budget) : S.cases[S.stage], sl=SLOTS[Math.min(S.stage,SLOTS.length-1)];
+  const st = S.final ? leftoverCase(S.budget) : S.cases[S.stage];
   S.cur=st; S.done=false; S.order = S.final ? st.routes.map(R) : shuffle(st.routes.map(R));
   $("stName").textContent=st.name;
-  $("stNo").textContent = S.final ? "DECEMBER · ONE LAST THING" : `${sl.month.toUpperCase()} · ${S.stage+1} OF ${SLOTS.length}`;
-  $("stFolder").setAttribute("data-tab",`Az. ${st.ref} · ${S.final?"BUDGET":sl.label.toUpperCase()}`);
-  $("stMeta").innerHTML=`<div><span>From</span><span>${st.from}</span></div><div><span>To</span><span>Babette</span></div><div><span>Date</span><span>${st.date}</span></div><div><span>Subject</span><span class="subj">${st.subj}</span></div>`;
+  $("stNo").textContent = S.final ? "ONE LAST THING" : `FILE ${S.stage+1} OF ${N_FILES}`;
+  $("stFolder").setAttribute("data-tab",`Az. ${st.ref}${S.final?" · BUDGET":" · "+st.area.toUpperCase()}`);
+  $("stMeta").innerHTML=`<div><span>From</span><span>${st.from}</span></div><div><span>To</span><span>Babette</span></div><div><span>Subject</span><span class="subj">${st.subj}</span></div>`;
   $("stBody").innerHTML=st.body.map(p=>`<p>${p}</p>`).join("");
   $("stAsk").style.display="";
   $("stRoutes").innerHTML=S.order.map((r,i)=>{
@@ -772,23 +819,38 @@ function openStage(){
   drawDials(); show("sStage");
 }
 
-function tilesHTML(pts,max,cost,q){
+function tilesHTML(pts,max,cost,q,isFile){
+  const third = isFile
+    ? `<div class="tile risk ${q===0?"zero":""}"><div class="l">IF THEY PULL THIS FILE</div><div class="n">${q}%</div><div class="w">${q?"that they find something":"nothing to find"}</div></div>`
+    : `<div class="tile risk zero"><div class="l">RISK</div><div class="n">–</div><div class="w">not a file the auditors pull</div></div>`;
   return `<div class="tiles">
     <div class="tile res"><div class="l">RESEARCH</div><div class="n">+${pts}<small> of ${max}</small></div><div class="w">${pts>=0.9*max?"gets what it needs":pts>=0.55*max?"gets most of it":pts>=0.3*max?"limps":"is lost"}</div></div>
     <div class="tile"><div class="l">BUDGET</div><div class="n">${cost?"−"+eur(cost):"€0"}</div><div class="w">${cost?"from the unit's "+eur(BUDGET):"costs the unit nothing"}</div></div>
-    <div class="tile risk ${q===0?"zero":""}"><div class="l">RISK</div><div class="n">${q?"+"+q+"%":"0%"}</div><div class="w">${riskWord(q)}</div></div>
+    ${third}
   </div>`;
 }
 function nextButton(){
-  const lastCard = S.stage===SLOTS.length-1 && !S.final, toDraw = S.final || (lastCard && S.budget<3000);
-  const label = toDraw ? "Twelve months later…" : lastCard ? "One last thing" : "Next file";
+  const lastFile = S.stage===N_FILES-1 && !S.final, toDraw = S.final || (lastFile && S.budget<3000);
+  const label = toDraw ? "Twelve months later…" : lastFile ? "One last thing" : "Next file";
   return {html:`<div class="center" style="margin-top:16px"><button class="btn" id="nextBtn">${label}</button></div>`,
-          go:()=>{ if(toDraw) openDraw(); else if(lastCard){ S.final=true; openStage(); } else { S.stage++; openStage(); } }};
+          go:()=>{ if(toDraw) openDraw(); else if(lastFile){ S.final=true; openStage(); } else { S.stage++; openStage(); } }};
 }
 function settle(r, pts, max, out){
-  S.res+=pts; S.budget-=r.cost; S.picks.push({...r, pts}); S.names.push(S.cur.name);
+  let comp="";
+  S.res+=pts; S.budget-=r.cost;
+  if(S.final){ S.left={label:r.label, pts}; }
+  else {
+    const before=auditRisk(S.picks);
+    S.picks.push({...r, pts}); S.names.push(S.cur.name);
+    const after=auditRisk(S.picks);
+    comp = after===0 ? `The audit as a whole: <b>0%</b>. So far there is nothing to find.`
+      : r.q===0 ? `The audit as a whole: still <b>${pct(after)}</b> that it finds something.`
+      : before===0 ? `The audit as a whole: <b>${pct(after)}</b> that it finds something. Until now there was nothing to find.`
+      : `The audit as a whole: <b>${pct(after)}</b> that it finds something. It was ${pct(before)}.`;
+    comp=`<div class="comp">${comp} <span style="color:var(--muted)">They pull two files of twelve.</span></div>`;
+  }
   const nb=nextButton();
-  $("stOut").innerHTML=`<div class="happens">${out}</div>`+tilesHTML(pts,max,r.cost,r.q)+nb.html;
+  $("stOut").innerHTML=`<div class="happens">${out}</div>`+tilesHTML(pts,max,r.cost,r.q,!S.final)+comp+nb.html;
   $("stOut").classList.add("on"); drawDials();
   $("nextBtn").addEventListener("click",nb.go);
   setTimeout(()=>$("stOut").scrollIntoView({behavior:"smooth",block:"nearest"}),200);
@@ -799,10 +861,15 @@ function choose(i){
   $("stAsk").style.display="none";
   $("stRoutes").querySelectorAll(".route").forEach((b,j)=>b.classList.add(j===i?"chosen":"gone"));
   thudSound();
-  if(!S.final){ settle(r, r.res*PTS, 10*PTS, r.out); return; }
+  if(!S.final){
+    // silly: another route on this card had at least the research for less risk
+    const better=S.order.filter(o=>o!==r && o.res>=r.res && o.q<r.q).sort((a,b)=>b.res-a.res||a.q-b.q)[0];
+    if(r.q>0 && better) r.silly={label:better.label, pts:ptsOf(better.res), q:better.q};
+    settle(r, ptsOf(r.res), 75, r.out); return;
+  }
   if(i!==1){ settle(r, r.res, S.cur.bonus, r.out); return; }
   // the carry-over: a small wheel of its own
-  $("stOut").innerHTML=`<div class="happens">The application goes to the ministry. Experience says it works a little more often than not.</div>
+  $("stOut").innerHTML=`<div class="happens">The application goes to the ministry.</div>
     <div class="wheelwrap small"><div class="pointer"></div><svg class="wheel" id="miniWheel" viewBox="-105 -105 210 210"></svg></div>
     <div class="wkey"><span><i style="background:#2f6b3b"></i>approved: ${TRANSFER_P}%</span><span><i style="background:#9a9ca3"></i>refused</span></div>
     <div class="center" style="margin-top:10px"><button class="btn" id="miniSpin">Send it off</button></div>`;
@@ -811,8 +878,7 @@ function choose(i){
   $("miniSpin").addEventListener("click",()=>{
     $("miniSpin").disabled=true; $("miniSpin").style.visibility="hidden";
     spinWheel($("miniWheel"), TRANSFER_P/100, ok=>{
-      thudSound();
-      S.carried=ok;
+      thudSound(); S.carried=ok;
       settle({...r, label:r.label+(ok?" (approved)":" (refused)")}, ok?r.res:0, S.cur.bonus,
         ok ? `Approved. ${eur(S.budget)} will be there in January, when the projects can actually use it.`
            : `Refused. The money goes back, and next year's budget is cut by the same amount.`);
@@ -820,70 +886,93 @@ function choose(i){
   });
 }
 
-/* ================= the draw ================= */
+/* ================= the audit ================= */
 function openDraw(){
-  const p=totalRisk(S.picks); S.p=p;
-  $("riskList").innerHTML=S.picks.map((r,i)=>`<div class="${r.q?"":"z"}"><span>${S.names[i]}</span><b>${r.q?r.q+"%":"nothing"}</b></div>`).join("");
-  $("pRed").textContent=pct(p);
-  drawWheel($("wheel"), p, "#b3261e", "#2f6b3b");
-  $("drawRes").textContent=""; $("drawSub").textContent="";
-  $("spinBtn").style.display=""; $("spinBtn").disabled=false; $("toEnd").style.display="none";
+  S.p=auditRisk(S.picks); S.hit=false; S.hitIdx=-1; S.pulled=[]; S.queue=[];
+  $("shelf").innerHTML=S.picks.map((r,i)=>`<div class="sfile ${r.q?"":"z"}" data-f="${i}">${S.names[i]}<b>${r.q?r.q+"%":"clean"}</b></div>`).join("");
+  $("wheels").innerHTML=""; $("drawRes").textContent=""; $("drawSub").textContent="";
+  $("pullBtn").style.display=""; $("pullBtn").disabled=false; $("spinBtn").style.display="none"; $("toEnd").style.display="none";
   show("sDraw");
 }
-function resolveDraw(hit){
-  S.hit=hit; S.hitIdx=-1;
-  if(hit){                                                   // which file was it? in proportion to the risk each carried
-    const w=S.picks.map(r=>r.q), tot=w.reduce((a,b)=>a+b,0); let u=Math.random()*tot;
-    for(let i=0;i<w.length;i++){ u-=w[i]; if(u<0){ S.hitIdx=i; break; } }
-    if(S.hitIdx<0) S.hitIdx=w.findIndex(x=>x>0);
-  }
+$("pullBtn").addEventListener("click",()=>{
+  $("pullBtn").disabled=true; $("pullBtn").style.display="none";
+  S.pulled=shuffle([...Array(N_FILES).keys()]).slice(0,N_PULLED).sort((a,b)=>a-b);
+  const files=[...$("shelf").querySelectorAll(".sfile")]; let t=0;
+  const flick=setInterval(()=>{ files.forEach(f=>f.classList.remove("flash")); files[Math.floor(Math.random()*files.length)].classList.add("flash"); if(++t>14){ clearInterval(flick); reveal(); } },90);
+});
+function reveal(){
+  thudSound();
+  $("shelf").querySelectorAll(".sfile").forEach((f,i)=>{ f.classList.remove("flash"); f.classList.add(S.pulled.includes(i)?"pulled":"dim"); });
+  $("wheels").innerHTML=S.pulled.map((i,k)=>{ const r=S.picks[i];
+    return `<div class="wslot ${r.q?"wait":""}" id="ws${k}"><div class="cap">${S.names[i]}<small>${r.q?r.q+"% THAT THEY FIND SOMETHING":"NOTHING TO FIND"}</small></div>`+
+      (r.q ? `<div class="wheelwrap"><div class="pointer"></div><svg class="wheel" id="wh${k}" viewBox="-105 -105 210 210"></svg></div><div class="res" id="wr${k}"></div>`
+           : `<div class="stampd">IN ORDER</div>`)+`</div>`; }).join("");
+  S.pulled.forEach((i,k)=>{ if(S.picks[i].q) drawWheel($("wh"+k), S.picks[i].q/100, "#b3261e", "#2f6b3b"); });
+  S.queue=S.pulled.map((i,k)=>({i,k})).filter(x=>S.picks[x.i].q>0);
+  if(!S.queue.length) finishAudit(); else nextSpin();
+  setTimeout(()=>$("wheels").scrollIntoView({behavior:"smooth",block:"nearest"}),150);
+}
+function nextSpin(){
+  const x=S.queue[0]; $("ws"+x.k).classList.remove("wait");
+  $("spinBtn").textContent = `Spin for ${S.names[x.i]}`; $("spinBtn").style.display=""; $("spinBtn").disabled=false;
 }
 $("spinBtn").addEventListener("click",()=>{
   $("spinBtn").disabled=true; $("spinBtn").style.display="none";
-  if(S.p===0){ resolveDraw(false); showDrawResult(); return; }
-  spinWheel($("wheel"), S.p, hit=>{ resolveDraw(hit); showDrawResult(); });
+  const x=S.queue.shift();
+  spinWheel($("wh"+x.k), S.picks[x.i].q/100, hit=>{
+    thudSound();
+    $("wr"+x.k).innerHTML = hit ? `<span style="color:var(--red)">Found.</span>` : `<span style="color:var(--green)">Nothing found.</span>`;
+    if(hit){ S.hit=true; S.hitIdx=x.i; finishAudit(); }
+    else if(S.queue.length) nextSpin(); else finishAudit();
+  });
 });
-function showDrawResult(){
-  thudSound();
+function finishAudit(){
   if(S.hit){
     $("drawRes").innerHTML=`<span style="color:var(--red)">They found something.</span>`;
     $("drawSub").innerHTML=`<b>${S.names[S.hitIdx]}:</b> ${S.picks[S.hitIdx].find}`;
   } else {
-    $("drawRes").innerHTML=`<span style="color:var(--green)">${S.p===0?"There was nothing to find.":"They found nothing."}</span>`;
-    $("drawSub").textContent = S.p===0 ? "The wheel has no red on it. They leave before lunch." : "Three files pulled, three files put back. They leave before lunch.";
+    const anyRisky=S.pulled.some(i=>S.picks[i].q>0);
+    $("drawRes").innerHTML=`<span style="color:var(--green)">${anyRisky?"They found nothing.":"There was nothing in those two."}</span>`;
+    $("drawSub").textContent = "Two files pulled, two files put back. They leave before five.";
   }
   $("toEnd").style.display="";
 }
 
-/* ================= end ================= */
+/* ================= the verdict ================= */
 function openEnd(){
-  const p=S.p, lvl = p<0.03?0 : p<0.2?1 : p<0.5?2 : 3;
+  const p=S.p;
+  const band = S.res>=FEAT?2 : S.res>=SOLID?1 : 0;
+  const sillies = S.picks.map((r,i)=>({r,i})).filter(x=>x.r.silly).sort((a,b)=>b.r.q-a.r.q);
+  const H = band===2 ? ["This was Babette's feat.","This could have been Babette's feat."]
+          : band===1 ? ["Not quite Babette's feat, but a solid year.","Not Babette's feat, and not safe either."]
+          : sillies.length ? ["No feat, and risks that bought nothing.","No feat, risks that bought nothing, and the library."]
+          : ["No feat here. You played it safe.","No feat, and the library all the same."];
+  $("featH").textContent=H[S.hit?1:0]; $("featH").style.color = S.hit?"var(--red)":band===2?"var(--green)":"var(--ink)";
   $("line1").innerHTML=`You managed <b>${S.res} / 1000</b> for research.`;
   const BOOK=on=>`<svg viewBox="0 0 24 24"><path d="M2.5 5.5c3.2-1.2 6.3-1 9.5 1 3.2-2 6.3-2.2 9.5-1v13c-3.2-1.2-6.3-1-9.5 1-3.2-2-6.3-2.2-9.5-1z" fill="${on?"#2f6b3b":"none"}" stroke="${on?"#2f6b3b":"#cfc7b4"}" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5v13" stroke="${on?"#fbf8f1":"#cfc7b4"}" stroke-width="1.4"/></svg>`;
-  const FLAME=on=>`<svg viewBox="0 0 24 24"><path d="M12.5 2c.6 4.2 5.5 6 5.5 11.5a6 6 0 0 1-12 0c0-2.300 1-3.800 2.200-5 .1 2 .9 3.200 2 3.500-.3-4 .2-7 2.300-10z" fill="${on?"#b3261e":"none"}" stroke="${on?"#b3261e":"#cfc7b4"}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
-  const nb = S.res>=900?5 : S.res>=750?4 : S.res>=600?3 : S.res>=450?2 : S.res>=250?1 : 0;
-  const nf = p<0.03?0 : p<0.2?1 : p<0.5?2 : p<0.75?3 : 4;
+  const FLAME=on=>`<svg viewBox="0 0 24 24"><path d="M12.5 2c.6 4.2 5.5 6 5.5 11.5a6 6 0 0 1-12 0c0-2.3 1-3.8 2.2-5 .1 2 .9 3.2 2 3.5-.3-4 .2-7 2.3-10z" fill="${on?"#b3261e":"none"}" stroke="${on?"#b3261e":"#cfc7b4"}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+  const nb = S.res>=FEAT?5 : S.res>=750?4 : S.res>=SOLID+50?3 : S.res>=450?2 : S.res>=250?1 : 0;
+  const nf = p<0.02?0 : p<RISK_BANDS[0]?1 : p<RISK_BANDS[1]?2 : p<RISK_BANDS[2]?3 : 4;
   $("ico1").innerHTML=[0,1,2,3,4].map(i=>BOOK(i<nb)).join("")+`<span class="lbl">${["barely any","little","about half","most of it","nearly everything","everything it needed"][nb]}</span>`;
-  $("lineR").innerHTML = p===0 ? `You carried <b>no risk</b> into the audit.` : `You carried a <b>${pct(p)}</b> risk into the audit.`;
-  $("ico2").innerHTML=[0,1,2,3].map(i=>FLAME(i<nf)).join("")+`<span class="lbl">${["none","small","considerable","enormous","reckless"][nf]}</span>`;
-  const ok=["You took no risks, and nothing happened to you. Whether anything happened for the research is the number above.",
-            "You took a few small risks, and it went well.",
-            "You took risks, and it went well.",
-            "You took enormous risks, and somehow it went well. Don't count on next year."];
-  const bad=["",
-            "You took only small risks, and one of them found you anyway. From January you are the institute's librarian.",
-            "You took risks, and this time it did not go well. From January you are the institute's librarian.",
-            "You took enormous risks, and the auditors needed about ten minutes. From January you are the institute's librarian."];
-  $("line2").textContent = S.hit ? bad[lvl]+(S.res>=750?" The researchers still come by, between the shelves, to ask how you would do it.":"") : ok[lvl];
+  $("lineR").innerHTML = p===0 ? `Your files gave the audit <b>nothing</b> to find.` : `The chance that the audit would find something in your files: <b>${pct(p)}</b>.`;
+  $("ico2").innerHTML=[0,1,2,3].map(i=>FLAME(i<nf)).join("")+`<span class="lbl">${["no risk","small risk","considerable risk","great risk","reckless"][nf]}</span>`;
+  const pulledNames=S.pulled.map(i=>S.names[i]).join(" and ");
+  $("line2").textContent = S.hit ? `The auditors pulled ${pulledNames}, and found ${S.names[S.hitIdx]}. From January you are the institute's librarian.`+(band===2?" The researchers still come by, between the shelves, to ask how you would do it.":"")
+     : S.pulled.some(i=>S.picks[i].q>0) ? `The auditors pulled ${pulledNames}, and found nothing.`
+     : p===0 ? `The auditors pulled ${pulledNames}. There was nothing to find anywhere.`
+     : `The auditors pulled ${pulledNames}, two files with nothing in them.`;
   $("line2").style.color = S.hit ? "var(--red)" : "var(--ink)";
+  $("trapBox").innerHTML = sillies.length ? `<div class="trap">${sillies.slice(0,2).map(x=>
+      `<b>${S.names[x.i]}:</b> you took a ${x.r.q}% risk for ${x.r.pts} points. “${x.r.silly.label}” offered ${x.r.silly.pts} for ${x.r.silly.q?x.r.silly.q+"%":"no risk at all"}.`).join("<br>")}</div>` : "";
   $("ledger").innerHTML=S.picks.map((r,i)=>
-    `<div class="lrow ${i===S.hitIdx?"hit":""}"><span class="nm">${S.names[i]}<small>${r.label}</small></span><span class="r">+${r.pts}</span><span class="q ${r.q?"":"z"}">${r.q?r.q+"%":"–"}</span></div>`).join("");
-  $("ruleLine").innerHTML=`Research: up to 150 per file, up to 100 for the leftover. Risk you carried into the audit: <b>${pct(p)}</b>. ${S.carried?"Carried into next year":"Returned to the ministry"}: <b>${eur(S.budget)}</b>.`;
+    `<div class="lrow ${i===S.hitIdx?"hit":""}"><span class="nm">${S.names[i]}${S.pulled.includes(i)?`<span class="tagp">PULLED</span>`:""}<small>${r.label}</small></span><span class="r">+${r.pts}</span><span class="q ${r.q?"":"z"}">${r.q?r.q+"%":"–"}</span></div>`).join("")
+    + (S.left?`<div class="lrow"><span class="nm">The Leftover<small>${S.left.label}</small></span><span class="r">+${S.left.pts}</span><span class="q z">–</span></div>`:"");
+  $("ruleLine").innerHTML=`Research: up to 75 per file, up to 100 for the leftover; ${FEAT} makes a feat. ${S.carried?"Carried into next year":"Returned to the ministry"}: <b>${eur(S.budget)}</b>.`;
   show("sEnd");
 }
 
 /* ================= wiring ================= */
-function start(){ S=fresh(); drawTitleStages(); show("sTitle"); }
+function start(){ S=fresh(); $("budIntro").textContent=eur(BUDGET); show("sTitle"); }
 $("startBtn").addEventListener("click",()=>{ thudSound(); openStage(); });
 $("toEnd").addEventListener("click",openEnd);
 $("again").addEventListener("click",start);
