@@ -237,6 +237,9 @@
   .comp{margin-top:10px;padding:9px 12px;border-left:3px solid var(--red);background:#fbf1ef;font-size:15px;border-radius:0 4px 4px 0}
   .feat{font-size:clamp(27px,5.6vw,40px);line-height:1.12}
   .trap{margin-top:14px;padding:10px 12px;border-left:3px solid var(--amber);background:#fbf4e2;font-size:15px;border-radius:0 4px 4px 0}
+  .fateline{margin:16px 0 0;padding-top:14px;border-top:1px dashed #cfc7b4;font-size:17px}
+  .sketch{font-size:17px;margin:12px 0 0}
+  .bench{font-size:15px;color:var(--muted);margin:14px 0 0;padding-top:12px;border-top:1px dashed #cfc7b4}
   .shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 14px}
   @media (max-width:560px){ .shelf{grid-template-columns:repeat(3,1fr)} }
   .sfile{border:1px solid #d9d2c0;border-radius:4px;padding:6px 7px;background:#fff;font-size:12.5px;line-height:1.25;transition:all .15s ease;min-height:52px}
@@ -330,10 +333,9 @@
       <div class="icons" id="ico1"></div>
       <p class="featline" id="lineR"></p>
       <div class="icons" id="ico2"></div>
-      <p class="featline fate" id="line2"></p>
-      <div id="trapBox"></div>
-      <div class="ledger" id="ledger"></div>
-      <div class="rule" id="ruleLine"></div>
+      <p class="fateline" id="line2"></p>
+      <p class="sketch" id="sketch"></p>
+      <p class="bench" id="bench"></p>
       <div class="endmotto">“Here it's never about costs. Only about the law.”</div>
       <div class="center" style="margin-top:20px"><button class="btn" id="again">Another year</button></div>
     </div>
@@ -865,6 +867,7 @@ function choose(i){
     // silly: another route on this card had at least the research for less risk
     const better=S.order.filter(o=>o!==r && o.res>=r.res && o.q<r.q).sort((a,b)=>b.res-a.res||a.q-b.q)[0];
     if(r.q>0 && better) r.silly={label:better.label, pts:ptsOf(better.res), q:better.q};
+    r.alts=S.order.map(o=>({res:o.res,q:o.q}));
     settle(r, ptsOf(r.res), 75, r.out); return;
   }
   if(i!==1){ settle(r, r.res, S.cur.bonus, r.out); return; }
@@ -938,6 +941,76 @@ function finishAudit(){
 }
 
 /* ================= the verdict ================= */
+const NUM=["no","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+const Cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+/* Two or three plain sentences on how the twelve decisions hang together. */
+function sketch(){
+  const P=S.picks, n=f=>P.filter(f).length;
+  const silly  = n(r=>r.silly);
+  const gamble = n(r=>r.q>=50 && !r.silly);                       // a real risk, taken for the research
+  const blatant= n(r=>r.q>=85);                                   // would not survive being opened
+  const covered= n(r=>r.q>=5 && r.q<50 && !r.silly);
+  const book   = n(r=>r.q===0 && r.alts.some(o=>o.res>=r.res+3)); // gave up research to stay clean
+  const lost   = n(r=>r.res<=3);
+  const freeHad= r=>r.alts.some(o=>o.res>=9 && o.q<=10);
+  const missed = n(r=>freeHad(r) && !(r.res>=9 && r.q<=10));      // a way that cost next to nothing, not taken
+  const high=S.res>=FEAT, low=S.res<SOLID;
+  const files=k=>NUM[k]+(k===1?" file":" files"), times=k=>k===1?"once":k===2?"twice":NUM[k]+" times";
+  let a,b,c="";
+  const heavy = S.p > (S.bench===null||S.bench===undefined ? 0.35 : S.bench)+0.10;   // carried clearly more than the year required
+  if(silly>=3 || (silly>=2 && low)){
+    a="You took risks without getting much for them.";
+    b=`On ${files(silly)} a safer way offered as much research or more.`;
+  } else if(gamble===0 && covered<=1){
+    a="You played it safe.";
+    b = low ? (lost>=2 ? `Nothing in your files could hurt you, but ${NUM[lost]} projects got almost nothing.` : "Nothing in your files could hurt you, and the research paid for that.")
+            : "Nothing in your files could hurt you, and this year the research could live with that.";
+  } else if(gamble>=5 || blatant>=3){
+    a="You put research first and gave almost everyone what they asked for.";
+    b = blatant>=1 ? `${Cap(files(blatant))} would not have survived being opened.` : "The researchers had the year of their lives, and the auditors only had to pick the right files.";
+  } else if(gamble>=2 && book>=4){
+    a="You were bold on some files and went by the book on others.";
+    b = high ? "It came out well for the research all the same." : `On ${files(book)} the research was let go rather than put at any risk.`;
+  } else if(gamble===0){
+    a="You looked for the covered way and nearly always found it.";
+    b = high ? "This year that was enough." : "But where only a real risk would have saved the research, you let the research go.";
+  } else if(low){
+    a="You took real risks, and the research still came up short.";
+    b = blatant ? `${Cap(files(blatant))} would not have survived being opened.` : "The risks were on the wrong files.";
+  } else if(blatant){
+    a="You put research first, and mostly chose your risks with care.";
+    b=`But ${files(blatant)} would not have survived being opened.`;
+  } else if(heavy){
+    a="You put research first and took real risks for it.";
+    b = high ? "Fewer would have done." : "Even so, the research fell a little short.";
+  } else {
+    a="You put research first and chose your risks with care.";
+    b = high ? "Where a file could carry a risk you took it, and where it couldn't you said no."
+      : book>=3 ? `But on ${files(book)} you let the research go rather than take any risk at all.`
+      : "A little more nerve on the right files, and it would have been the feat.";
+  }
+  if(silly>=1 && silly<3) c = silly===1 ? "One of your risks bought nothing: a safer way on the same file offered as much." : "Two of your risks bought nothing: a safer way offered as much.";
+  else if(missed>=2) c = `${Cap(times(missed))} there was a way that cost next to nothing, and you took another.`;
+  return [a,b,c].filter(Boolean).join(" ");
+}
+/* What a perfect Babette could have done with the same twelve files: the least audit risk that still reaches the feat.
+   (Least summed risk per research total by dynamic programming; she buys the rig with what is left.) */
+function benchmark(){
+  let dp=new Map([[0,{sq:0,cost:0,path:[]}]]);
+  for(const c of S.cases){ const nx=new Map();
+    for(const [pts,st] of dp) for(const r of c.routes.map(R)){ if(st.cost+r.cost>BUDGET) continue;
+      const k=pts+ptsOf(r.res), v={sq:st.sq+r.q, cost:st.cost+r.cost, path:st.path.concat([r])}, o=nx.get(k);
+      if(!o || v.sq<o.sq) nx.set(k,v); }
+    dp=nx; }
+  let best=null;
+  for(const [pts,st] of dp){ const L=BUDGET-st.cost, bonus=L>=3000?Math.min(100,Math.round(L/BUDGET_NOTE)):0;
+    if(pts+Math.round(RIG_SHARE*bonus)>=FEAT){ const p=auditRisk(st.path); if(best===null||p<best) best=p; } }
+  S.bench=best;
+  if(best===null) return `With these twelve files, not even a perfect Babette could have reached the feat.`;
+  const lead=`With these twelve files, a perfect Babette would have reached the feat at an audit risk of about <b>${pct(best)}</b>.`;
+  if(S.res>=FEAT) return lead+(S.p<=best+0.03 ? ` You did it at ${pct(S.p)}. It doesn't get much better.` : ` You carried ${pct(S.p)}.`);
+  return lead+(S.p===0 ? ` You carried none, and reached ${S.res}.` : ` You carried ${pct(S.p)}, and reached ${S.res}.`);
+}
 function openEnd(){
   const p=S.p;
   const band = S.res>=FEAT?2 : S.res>=SOLID?1 : 0;
@@ -961,12 +1034,9 @@ function openEnd(){
      : p===0 ? `The auditors pulled ${pulledNames}. There was nothing to find anywhere.`
      : `The auditors pulled ${pulledNames}, two files with nothing in them.`;
   $("line2").style.color = S.hit ? "var(--red)" : "var(--ink)";
-  $("trapBox").innerHTML = sillies.length ? `<div class="trap">${sillies.slice(0,2).map(x=>
-      `<b>${S.names[x.i]}:</b> you took a ${x.r.q}% risk for ${x.r.pts} points. “${x.r.silly.label}” offered ${x.r.silly.pts} for ${x.r.silly.q?x.r.silly.q+"%":"no risk at all"}.`).join("<br>")}</div>` : "";
-  $("ledger").innerHTML=S.picks.map((r,i)=>
-    `<div class="lrow ${S.hits.includes(i)?"hit":""}"><span class="nm">${S.names[i]}${S.pulled.includes(i)?`<span class="tagp">PULLED</span>`:""}<small>${r.label}</small></span><span class="r">+${r.pts}</span><span class="q ${r.q?"":"z"}">${r.q?r.q+"%":"–"}</span></div>`).join("")
-    + (S.left?`<div class="lrow"><span class="nm">The Leftover<small>${S.left.label}</small></span><span class="r">+${S.left.pts}</span><span class="q z">–</span></div>`:"");
-  $("ruleLine").innerHTML=`Research: up to 75 per file, up to 100 for the leftover; ${FEAT} makes a feat. ${S.carried?"Carried into next year":"Returned to the ministry"}: <b>${eur(S.budget)}</b>.`;
+  const benchLine=benchmark();
+  $("sketch").textContent=sketch();
+  $("bench").innerHTML=benchLine;
   show("sEnd");
 }
 
