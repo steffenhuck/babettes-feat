@@ -272,7 +272,7 @@
       <div class="intro">
         <p>You are Babette, research manager. You have a PhD and an office between the professors and the administration.</p>
         <p>Your job is to get research done. Twelve requests will cross your desk this year. Each has two to four ways through, and each way does three things:</p>
-        <p><b>Research.</b> How much of what the project needs survives. This is what you are for.<br>
+        <p><b>Research.</b> How much of what the project needs survives. This is what you are for. The year is worth up to 1,000 points, and 850 would be a feat.<br>
            <b>Budget.</b> Your unit has <span id="budIntro"></span> for the year. Doing things properly is often the dear way. What is left at the end is yours to place.<br>
            <b>Risk.</b> What an auditor would make of the file, if he ever opened it.</p>
         <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files, and each gets a spin of its own wheel. The red on the wheel is the risk you left in the file. If a wheel stops on red, you are not sacked. You are moved to the library.</p>
@@ -908,7 +908,7 @@ function reveal(){
   thudSound();
   $("shelf").querySelectorAll(".sfile").forEach((f,i)=>{ f.classList.remove("flash"); f.classList.add(S.pulled.includes(i)?"pulled":"dim"); });
   $("wheels").innerHTML=S.pulled.map((i,k)=>{ const r=S.picks[i];
-    return `<div class="wslot wait" id="ws${k}"><div class="cap">${S.names[i]}<small>${r.q?r.q+"% THAT THEY FIND SOMETHING":"A CLEAN FILE: NO RED ON THIS WHEEL"}</small></div>`+
+    return `<div class="wslot wait" id="ws${k}"><div class="cap">${S.names[i]}<small>${r.q?r.q+"% THAT THEY FIND SOMETHING":"A CLEAN FILE: NOTHING TO SPIN FOR"}</small></div>`+
       `<div class="wheelwrap"><div class="pointer"></div><svg class="wheel" id="wh${k}" viewBox="-105 -105 210 210"></svg></div><div class="res" id="wr${k}"></div></div>`; }).join("");
   S.pulled.forEach((i,k)=>drawWheel($("wh"+k), S.picks[i].q/100, "#b3261e", "#2f6b3b"));
   S.queue=S.pulled.map((i,k)=>({i,k}));          // always two wheels, one per pulled file
@@ -916,6 +916,11 @@ function reveal(){
   setTimeout(()=>$("wheels").scrollIntoView({behavior:"smooth",block:"nearest"}),150);
 }
 function nextSpin(){
+  while(S.queue.length && S.picks[S.queue[0].i].q===0){
+    const y=S.queue.shift(); $("ws"+y.k).classList.remove("wait");
+    $("wr"+y.k).innerHTML=`<span style="color:var(--green)">Nothing to find.</span>`;
+  }
+  if(!S.queue.length){ finishAudit(); return; }
   const x=S.queue[0]; $("ws"+x.k).classList.remove("wait");
   $("spinBtn").textContent = `Spin for ${S.names[x.i]}`; $("spinBtn").style.display=""; $("spinBtn").disabled=false;
 }
@@ -1011,8 +1016,8 @@ function benchmark(){
     if(pts+bonus>=FEAT){ const p=auditRisk(st.path); if(best===null||p<best) best=p; } }   // she also gets her carry-over approved
   if(best!==null && S.res>=FEAT && S.p<best) best=S.p;
   S.bench=best;
-  if(best===null) return `With these twelve files, not even a perfect Babette could have reached the feat.`;
-  const lead=`With these twelve files, a perfect Babette would have reached the feat at an audit risk of about <b>${pct(best)}</b>.`;
+  if(best===null) return `With these twelve files, not even a perfect Babette could have reached the feat, ${FEAT} for research.`;
+  const lead=`With these twelve files, a perfect Babette would have reached the feat, ${FEAT} for research, at an audit risk of about <b>${pct(best)}</b>.`;
   if(S.res>=FEAT) return lead+(S.p<=best+0.03 ? ` You did it at ${pct(S.p)}. It doesn't get much better.` : ` You carried ${pct(S.p)}.`);
   return lead+(S.p===0 ? ` You carried none, and reached ${S.res}.` : ` You carried ${pct(S.p)}, and reached ${S.res}.`);
 }
