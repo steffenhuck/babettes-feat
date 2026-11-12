@@ -978,8 +978,8 @@ function sketch(){
     a="You took real risks, and the research still came up short.";
     b = blatant ? `${Cap(files(blatant))} would not have survived being opened.` : "The risks were on the wrong files.";
   } else if(blatant){
-    a="You put research first, and mostly chose your risks with care.";
-    b=`But ${files(blatant)} would not have survived being opened.`;
+    a = heavy ? "You put research first and took real risks for it." : "You put research first, and mostly chose your risks with care.";
+    b = heavy ? `${Cap(files(blatant))} would not have survived being opened.` : `But ${files(blatant)} would not have survived being opened.`;
   } else if(heavy){
     a="You put research first and took real risks for it.";
     b = high ? "Fewer would have done." : "Even so, the research fell a little short.";
@@ -994,7 +994,7 @@ function sketch(){
   return [a,b,c].filter(Boolean).join(" ");
 }
 /* What a perfect Babette could have done with the same twelve files: the least audit risk that still reaches the feat.
-   (Least summed risk per research total by dynamic programming; she buys the rig with what is left.) */
+   (Least summed risk per research total by dynamic programming; the leftover goes her way.) */
 function benchmark(){
   let dp=new Map([[0,{sq:0,cost:0,path:[]}]]);
   for(const c of S.cases){ const nx=new Map();
@@ -1004,7 +1004,8 @@ function benchmark(){
     dp=nx; }
   let best=null;
   for(const [pts,st] of dp){ const L=BUDGET-st.cost, bonus=L>=3000?Math.min(100,Math.round(L/BUDGET_NOTE)):0;
-    if(pts+Math.round(RIG_SHARE*bonus)>=FEAT){ const p=auditRisk(st.path); if(best===null||p<best) best=p; } }
+    if(pts+bonus>=FEAT){ const p=auditRisk(st.path); if(best===null||p<best) best=p; } }   // she also gets her carry-over approved
+  if(best!==null && S.res>=FEAT && S.p<best) best=S.p;
   S.bench=best;
   if(best===null) return `With these twelve files, not even a perfect Babette could have reached the feat.`;
   const lead=`With these twelve files, a perfect Babette would have reached the feat at an audit risk of about <b>${pct(best)}</b>.`;
