@@ -275,7 +275,7 @@
         <p><b>Research.</b> How much of what the project needs survives. This is what you are for.<br>
            <b>Budget.</b> Your unit has <span id="budIntro"></span> for the year. Doing things properly is often the dear way. What is left at the end is yours to place.<br>
            <b>Risk.</b> What an auditor would make of the file, if he ever opened it.</p>
-        <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files, and each gets a spin of its own wheel. The red on the wheel is the risk you left in the file.</p>
+        <p>At the end of the year the auditors come for one afternoon. They pull <b>two</b> of your twelve files, and each gets a spin of its own wheel. The red on the wheel is the risk you left in the file. If a wheel stops on red, you are not sacked. You are moved to the library.</p>
         <p>Beware: some ways through only sound clever.</p>
       </div>
       <div class="center" style="margin-top:18px"><button class="btn" id="startBtn">Open the first file</button></div>
@@ -334,6 +334,7 @@
       <p class="featline" id="lineR"></p>
       <div class="icons" id="ico2"></div>
       <p class="fateline" id="line2"></p>
+      <p class="sketch" id="libLine"></p>
       <p class="sketch" id="sketch"></p>
       <p class="bench" id="bench"></p>
       <div class="endmotto">“Here it's never about costs. Only about the law.”</div>
@@ -924,8 +925,11 @@ $("spinBtn").addEventListener("click",()=>{
   spinWheel($("wh"+x.k), S.picks[x.i].q/100, hit=>{
     thudSound();
     $("wr"+x.k).innerHTML = hit ? `<span style="color:var(--red)">Found.</span>` : `<span style="color:var(--green)">${S.picks[x.i].q?"Nothing found.":"Nothing to find."}</span>`;
-    if(hit){ S.hit=true; S.hits.push(x.i); if(S.hitIdx<0) S.hitIdx=x.i; }
-    if(S.queue.length) nextSpin(); else finishAudit();
+    if(hit){
+      S.hit=true; S.hits.push(x.i); S.hitIdx=x.i;
+      S.queue.forEach(y=>{ $("wr"+y.k).innerHTML=`<span style="color:var(--muted);font-weight:500">Not opened. No need.</span>`; });
+      S.queue=[]; finishAudit();
+    } else if(S.queue.length) nextSpin(); else finishAudit();
   });
 });
 function finishAudit(){
@@ -1030,7 +1034,11 @@ function openEnd(){
   $("lineR").innerHTML = p===0 ? `Your files gave the audit <b>nothing</b> to find.` : `The chance that the audit would find something in your files: <b>${pct(p)}</b>.`;
   $("ico2").innerHTML=[0,1,2,3].map(i=>FLAME(i<nf)).join("")+`<span class="lbl">${["no risk","small risk","considerable risk","great risk","reckless"][nf]}</span>`;
   const pulledNames=S.pulled.map(i=>S.names[i]).join(" and ");
-  $("line2").textContent = S.hit ? `The auditors pulled ${pulledNames}, and found ${S.hits.length===2?"something in both":"something in "+S.names[S.hitIdx]}. From January you are the institute's librarian.`+(band===2?" The researchers still come by, between the shelves, to ask how you would do it.":"")
+  $("libLine").textContent = !S.hit ? "" :
+      "You are not sacked. Institutes like this one do not sack people. From January you run the library instead: four rooms of books that nobody has taken out in years, and a desk where nobody asks you anything."
+      + (band===2 ? " Except the researchers, who still come by between the shelves to ask how you would do it." : "");
+  $("libLine").style.display = S.hit ? "" : "none";
+  $("line2").textContent = S.hit ? `The auditors pulled ${pulledNames}, and found something in ${S.names[S.hitIdx]}.`
      : S.pulled.some(i=>S.picks[i].q>0) ? `The auditors pulled ${pulledNames}, and found nothing.`
      : p===0 ? `The auditors pulled ${pulledNames}. There was nothing to find anywhere.`
      : `The auditors pulled ${pulledNames}, two files with nothing in them.`;
